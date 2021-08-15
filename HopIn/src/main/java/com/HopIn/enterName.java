@@ -32,13 +32,13 @@ public class enterName extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                addNametoDB();
+                addNameToDB();
 
             }
         });
     }
 
-    public void addNametoDB(){
+    public void addNameToDB(){
         Intent i = getIntent();
         Intent nextIntent = new Intent(this, enterCar.class);
 
