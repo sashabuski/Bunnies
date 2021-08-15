@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "399427086477",
+    "firebase_url": "https://hopin-d6c63-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "hopin-d6c63",
+    "storage_bucket": "hopin-d6c63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399427086477:android:d570eceaa74ef6c9ec1ac4",
+        "android_client_info": {
+          "package_name": "com.HopIn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399427086477-39k2elm1u8tguh07gnmde63mq35n9jui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB799CxExJb_FjQ4Qp3Hc7j71-Pw2HV5go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399427086477-39k2elm1u8tguh07gnmde63mq35n9jui.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399427086477:android:e7aa6668881af605ec1ac4",
+        "android_client_info": {
+          "package_name": "com.example.loginprototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399427086477-39k2elm1u8tguh07gnmde63mq35n9jui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB799CxExJb_FjQ4Qp3Hc7j71-Pw2HV5go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399427086477-39k2elm1u8tguh07gnmde63mq35n9jui.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
