@@ -45,7 +45,13 @@ public class enterCar extends AppCompatActivity {
         });
 
     }
-        public void addCarToDB(){
+
+    @Override
+    public void onBackPressed(){
+
+    }
+
+    public void addCarToDB(){
             Intent i = getIntent();
 
 

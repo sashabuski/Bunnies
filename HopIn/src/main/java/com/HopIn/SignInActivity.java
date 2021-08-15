@@ -53,8 +53,8 @@ public class SignInActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Intent intent;
-                    intent = new Intent(SignInActivity.this, MainActivity.class);
-                    intent.putExtra("email", "logged in as: "+email);
+                    intent = new Intent(SignInActivity.this, PreScreen.class);
+                   // intent.putExtra("email", "logged in as: "+email);
                     startActivity(intent);
                 }else{
                     Toast.makeText(SignInActivity.this, "Failed to login. Please check your credentials", Toast.LENGTH_LONG).show();

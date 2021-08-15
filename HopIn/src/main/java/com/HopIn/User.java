@@ -62,7 +62,26 @@ public class User implements Serializable {
     }
 
 
-    public User(){};
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", fName='" + fName + '\'' +
+                ", lName='" + lName + '\'' +
+                ", carModel='" + carModel + '\'' +
+                ", carNumber='" + carNumber + '\'' +
+                '}';
+    }
+
+    public User(){
+        this.email = null;
+        this.password = null;
+        String fName = null;
+        String lName = null;
+        String carModel = null;
+        String carNumber = null;
+    };
 
     public User(String email, String password){
         this.email = email;
