@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +25,37 @@ public class PreScreen extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     User currentUser;
     TextView a,b,c,d,e,f;
-
+    Switch zwitch;
+    Button nextButton;
+    Intent driverIntent;
+    Intent riderIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pre_screen);
         currentUser = new User();
-        DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getUid());
+        zwitch = (Switch)findViewById(R.id.switch1);
+        nextButton = (Button)findViewById(R.id.button);
         a = (TextView)findViewById(R.id.a);
         b = (TextView)findViewById(R.id.b);
         c = (TextView)findViewById(R.id.c);
         d = (TextView)findViewById(R.id.d);
         e = (TextView)findViewById(R.id.e);
         f = (TextView)findViewById(R.id.f);
+        driverIntent = new Intent(this, DriverMapsActivity.class);
+
+        nextButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                if(zwitch.isChecked()){
+                    startActivity(driverIntent);
+                }else{
+                    
+                }
+
+            }});
+        DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -51,7 +72,7 @@ public class PreScreen extends AppCompatActivity {
 
         });
 
-        
+
     }
 
     @Override
