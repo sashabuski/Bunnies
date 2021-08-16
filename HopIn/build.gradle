@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -41,7 +42,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.firebase:geofire-java:3.0.0'
+    //implementation 'com.firebase:geofire-java:3.0.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-firestore:23.0.3'
     implementation platform('com.google.firebase:firebase-bom:26.3.0')

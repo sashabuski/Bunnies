@@ -49,6 +49,7 @@ public class PreScreen extends AppCompatActivity {
             public void onClick(View view) {
 
                 if(zwitch.isChecked()){
+                    driverIntent.putExtra("loggedUser", currentUser);
                     startActivity(driverIntent);
                 }else{
                     

@@ -7,7 +7,7 @@ public class UserLocation {
 
     private User user;
     private GeoPoint geoPoint;
-    private @ServerTimestamp String timestamp;
+   // private @ServerTimestamp String timestamp;
 
     public User getUser() {
         return user;
@@ -25,27 +25,27 @@ public class UserLocation {
         this.geoPoint = geoPoint;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
+  //  public String getTimestamp() {
+  //      return timestamp;
+   // }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+  //  public void setTimestamp(String timestamp) {
+       // this.timestamp = timestamp;
+   // }
 
     public UserLocation(){
 
     }
 
-    public UserLocation(User user, GeoPoint geoPoint, String timestamp) {
+    public UserLocation(User user, GeoPoint geoPoint) {
         this.user = user;
         this.geoPoint = geoPoint;
-        this.timestamp = timestamp;
+      //  this.timestamp = timestamp;
     }
     public UserLocation(User user) {
         this.user = user;
         this.geoPoint = null;
-        this.timestamp = null;
+        //this.timestamp = null;
     }
 
 }
