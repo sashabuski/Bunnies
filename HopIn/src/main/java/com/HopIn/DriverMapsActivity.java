@@ -58,8 +58,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Intent intent = new Intent(this, ExitService.class);
-        startService(intent);
+        //Intent intent = new Intent(this, ExitService.class);
+        //startService(intent);//attempt to edit db on kill
 
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
@@ -68,6 +68,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         currentUserLocation = new UserLocation(currentUser);
 
     }
+
+   /* @Override
+    protected void onDestroy() {
+
+        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
+        super.onDestroy();//attempt to edit db on kill
+    }*/
+
 
 
     @Override
@@ -111,6 +119,40 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
     }
+    @Override
+    protected void onStop() {
+        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
+
+        locationManager.removeUpdates(locationListener);
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                currentUserLocation.setGeoPoint(geoPoint);
+
+                db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
+
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            }
+        };
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, locationListener);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onBackPressed(){//open prompt are you sure?
         db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();

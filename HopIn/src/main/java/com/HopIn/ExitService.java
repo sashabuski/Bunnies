@@ -1,5 +1,5 @@
 package com.HopIn;
-
+/*
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -23,9 +23,9 @@ public class ExitService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         System.out.println("onTaskRemoved called");
-        super.onTaskRemoved(rootIntent);
         db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
+        super.onTaskRemoved(rootIntent);
         this.stopSelf();
     }
 }
-
+*/

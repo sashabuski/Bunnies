@@ -43,7 +43,7 @@ public class PreScreen extends AppCompatActivity {
         e = (TextView)findViewById(R.id.e);
         f = (TextView)findViewById(R.id.f);
         driverIntent = new Intent(this, DriverMapsActivity.class);
-
+        riderIntent = new Intent(this, RiderMapsActivity.class);
         nextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -52,7 +52,8 @@ public class PreScreen extends AppCompatActivity {
                     driverIntent.putExtra("loggedUser", currentUser);
                     startActivity(driverIntent);
                 }else{
-                    
+                    riderIntent.putExtra("loggedUser", currentUser);
+                    startActivity(riderIntent);
                 }
 
             }});
