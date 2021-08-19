@@ -18,6 +18,11 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ *
+ * This activity is used to sign in the user by referencing the FireBase authentication system.
+ *
+ */
 public class SignInActivity extends AppCompatActivity {
 
 

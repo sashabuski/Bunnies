@@ -2,6 +2,13 @@ package com.HopIn;
 
 import java.io.Serializable;
 
+/**
+ * This class is the user object that is created when the user creates their account.
+ * Contains the static information about the user.
+ * The object is then used within a UserLocation object upon the user sending their
+ * live location on the map.
+ *
+ */
 public class User implements Serializable {
 
     String email;

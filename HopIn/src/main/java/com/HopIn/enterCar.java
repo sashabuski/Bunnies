@@ -12,6 +12,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+/**
+ * This Activity requests the car details to be entered by the user when registering
+ * their account, and saves it to the User db object. This is optional information and
+ * the user can use the skip button as car details wont be necessary for passengers only.
+ *
+ */
 public class enterCar extends AppCompatActivity {
 
     private EditText carModelInput, carNumberInput;
@@ -46,11 +52,19 @@ public class enterCar extends AppCompatActivity {
 
     }
 
+    /**
+     * Method prevents back button default function
+     * (disable back button)
+     */
     @Override
     public void onBackPressed(){
 
     }
 
+    /**
+     *Method Used in button onClickListener
+     *
+     */
     public void addCarToDB(){
             Intent i = getIntent();
 

@@ -1,4 +1,10 @@
 package com.HopIn;
+/**
+ *
+ * This activity is opened when starting the app, It gives the user options to
+ * create an account or sign in, with buttons that take the user to either
+ * activity.
+ */
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;

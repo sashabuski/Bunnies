@@ -12,6 +12,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+/**
+ * This Activity requests the users name to be entered by the user when registering
+ * their account, and saves it to the User db object.
+ */
 public class enterName extends AppCompatActivity {
 
     private EditText firstNameInput, lastNameInput;

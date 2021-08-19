@@ -23,6 +23,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This register user activity registers a new user with firebase authentication.
+ * Will not accept duplicate emails, will only accept emails ending with "@autuni.ac.nz"
+ * +other input requirements
+ *
+ */
 public class Register2 extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText, repasswordEditText;
@@ -45,20 +51,7 @@ public class Register2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 registerUser();
-               /*if() {
 
-                    String email = emailEditText.getText().toString().trim();
-                    String password = passwordEditText.getText().toString().trim();
-
-                    /*Map<String, String> newUser = new HashMap<>();
-                    newUser.put("email", email);
-                    newUser.put("password", password);
-                    newUser.put("firstName", null);
-                    newUser.put("lastName", null);
-                    newUser.put("carModel", null);
-                    newUser.put("carNumber", null);*/
-
-                    //User newUser = new User(email, password);
 
                 }
 
@@ -68,9 +61,10 @@ public class Register2 extends AppCompatActivity {
         }
 
 
-
-
-
+    /**
+     * Method will only save to db if all input specifications have been passed.
+     * used in onClickListener
+     */
     public void registerUser() {
 
 

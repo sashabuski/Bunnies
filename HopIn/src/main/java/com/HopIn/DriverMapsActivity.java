@@ -33,6 +33,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
+/**
+ * This Map activity is seen by the drivers. It also sends realtime updates of the drivers geopoint
+ * to the database "drivers" table.
+ *
+ * ---Need to fix when location updates are turned off + remove document from "drivers" DB collection.
+ * ---(onStop, onResume, onDestroy)
+ */
+
 public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -77,7 +85,11 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     }*/
 
 
-
+    /**
+     * Implements a locationListener that sends real time geopoint updates to the driver DB collection
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
 

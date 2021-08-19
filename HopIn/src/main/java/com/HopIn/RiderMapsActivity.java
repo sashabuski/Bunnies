@@ -39,6 +39,16 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Rider Map activity uses documentSnapshots in onEvent listener to detect and read changes
+ * in the Drivers FireStore collection in real time. This is used to create and continuously update
+ * clusterMarkers that represent and contain objects corresponding with each driver.
+ *
+ * This activity also sends the riders goePoint to the Riders Firestore collection in real time.
+ *
+ * ---Need to fix when location updates are turned off + remove document from "drivers" DB collection.
+ * ---(onStop, onResume, onDestroy)
+ */
 public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -118,6 +128,14 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         }
 
     }
+
+    /**
+     *
+     * This method combines clusterManager/renderer/markers with realtime geoPoint updates from FireStore
+     * DB Drivers collection to display current drivers as markers on the map in real time.
+     * @param googleMap
+     * @param view
+     */
 
     public void getDriversWithRealtimeUpdates(GoogleMap googleMap, View view) {
 

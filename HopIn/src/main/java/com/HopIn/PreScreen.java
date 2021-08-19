@@ -19,6 +19,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.SQLOutput;
 
+/**
+ * This activity is displayed before the map is open and gives the
+ * user the option to open either the driver map or the rider map via the
+ * switch that changes the destination activity of the next button.
+ *
+ */
 public class PreScreen extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
