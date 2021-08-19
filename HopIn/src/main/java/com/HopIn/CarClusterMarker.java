@@ -16,13 +16,19 @@ public class CarClusterMarker implements ClusterItem {
     private final LatLng position;
     private final String title;
     private final String snippet;
+    private final UserLocation user;
+
     //adduserlocation
-    public CarClusterMarker(double lat, double lng, String title, String snippet) {
+    public CarClusterMarker(double lat, double lng, String title, String snippet,  UserLocation user) {
         position = new LatLng(lat, lng);
         this.title = title;
         this.snippet = snippet;
+        this.user = user;
     }
 
+    public UserLocation getUser() {
+        return user;
+    }
     @Override
     public LatLng getPosition() {
         return position;

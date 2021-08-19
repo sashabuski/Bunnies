@@ -13,9 +13,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +31,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.HopIn.databinding.ActivityRiderMapsBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -79,9 +84,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         //startService(intent);//attempt to edit db on kill
 
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
-
-
         currentUserLocation = new UserLocation(currentUser);
 
     }
@@ -109,6 +113,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                 currentUserLocation.setGeoPoint(geoPoint);
 
@@ -168,14 +173,27 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                             clusterManager.clearItems();
                             for (DocumentSnapshot snapshot : snapshotList) {
                                 LatLng pls = new LatLng(snapshot.toObject(UserLocation.class).getGeoPoint().getLatitude(), snapshot.toObject(UserLocation.class).getGeoPoint().getLongitude());
-
-                                CarClusterMarker ccm = new CarClusterMarker(pls.latitude,pls.longitude,snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk");
+                                UserLocation user = snapshot.toObject(UserLocation.class);
+                                CarClusterMarker ccm = new CarClusterMarker(pls.latitude,pls.longitude,snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk",user);
 
                                 clusterManager.addItem(ccm);
                                 mClusterMarkers.add(ccm);
 
                             }
+                            clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<CarClusterMarker>() {
+                                @Override
+                                public boolean onClusterItemClick(CarClusterMarker item) {
 
+                                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
+                                    View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_request_sheet, (LinearLayout)findViewById(R.id.requestSheetContainer));
+                                    TextView a = bottomSheetView.findViewById(R.id.name);
+                                    a.setText(item.getUser().getUser().fName+" "+item.getUser().getUser().lName);
+                                    bottomSheetDialog.setContentView(bottomSheetView);
+                                    bottomSheetDialog.show();
+                                    return true;
+                                }
+
+                            });
                             clusterManager.cluster();
 
 
