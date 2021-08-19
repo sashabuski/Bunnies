@@ -77,9 +77,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
     }
 
-   /* @Override
-    protected void onDestroy() {
-
+    /* @Override
+   protected void onDestroy() {
+        locationManager.removeUpdates(locationListener);
         db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
         super.onDestroy();//attempt to edit db on kill
     }*/
@@ -131,7 +131,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
     }
-    @Override
+    /*@Override
     protected void onStop() {
         db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
 
@@ -163,12 +163,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed(){//open prompt are you sure?
-        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
         locationManager.removeUpdates(locationListener);
+        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
         Intent intent = new Intent(this, PreScreen.class);
         startActivity(intent);
 

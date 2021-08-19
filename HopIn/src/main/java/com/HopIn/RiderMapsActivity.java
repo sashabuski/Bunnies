@@ -209,7 +209,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
         super.onDestroy();//attempt to edit db on kill
     }*/
-    @Override
+   /* @Override
     protected void onResume(){
         super.onResume();
 
@@ -241,13 +241,14 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         locationManager.removeUpdates(locationListener);
         db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
         super.onStop();
-    }
+    }*/
 
 
     @Override
     public void onBackPressed(){//open prompt are you sure?
-        db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
+
         locationManager.removeUpdates(locationListener);
+        db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
         Intent intent = new Intent(this, PreScreen.class);
         startActivity(intent);
 
