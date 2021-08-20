@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.HopIn.databinding.ActivityRiderMapsBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -40,8 +41,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.collections.MarkerManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -171,13 +175,20 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                             List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
 
                             clusterManager.clearItems();
+
                             for (DocumentSnapshot snapshot : snapshotList) {
                                 LatLng pls = new LatLng(snapshot.toObject(UserLocation.class).getGeoPoint().getLatitude(), snapshot.toObject(UserLocation.class).getGeoPoint().getLongitude());
                                 UserLocation user = snapshot.toObject(UserLocation.class);
-                                CarClusterMarker ccm = new CarClusterMarker(pls.latitude,pls.longitude,snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk",user);
+                               ;
 
-                                clusterManager.addItem(ccm);
-                                mClusterMarkers.add(ccm);
+                                if(isTimestampLive(user.getTimestamp())) {
+                                    CarClusterMarker ccm = new CarClusterMarker(pls.latitude, pls.longitude, snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk", user);
+
+                                    clusterManager.addItem(ccm);
+                                    mClusterMarkers.add(ccm);
+                                }else{
+
+                                }
 
                             }
                             clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<CarClusterMarker>() {
@@ -203,6 +214,34 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                     }
                 });
     }
+
+  public boolean isTimestampLive(Date date){
+
+      Date liveTime = new Date(System.currentTimeMillis()- 5000);
+      if (date != null) {
+          if (date.after(liveTime)) {
+
+              return true;
+          } else {
+
+              return false;
+
+          }
+      }
+    return false;
+  }
+  /*public void deleteOldMarkers(ClusterManager cm, UserLocation ul){
+
+
+      MarkerManager.Collection userList = cm.getClusterMarkerCollection();
+      ArrayList list = new ArrayList(userList);
+      for(CarClusterMarker ccm : userList){
+          if (ccm.getUser().equals(ul.getUser())){
+              cm.removeItem(ccm);
+          }
+      }
+  }*/
+
    /* @Override
     protected void onDestroy() {
 
