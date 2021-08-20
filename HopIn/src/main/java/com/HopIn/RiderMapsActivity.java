@@ -116,7 +116,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                 currentUserLocation.setGeoPoint(geoPoint);
-
+                currentUserLocation.setTimestamp(null);
                 db.collection("Riders").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
 
 

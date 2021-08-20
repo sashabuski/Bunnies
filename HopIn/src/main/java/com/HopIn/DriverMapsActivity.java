@@ -114,7 +114,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                 currentUserLocation.setGeoPoint(geoPoint);
-
+                currentUserLocation.setTimestamp(null);
                 db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
 
 
