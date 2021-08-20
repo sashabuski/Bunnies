@@ -22,13 +22,15 @@ public class enterCar extends AppCompatActivity {
 
     private EditText carModelInput, carNumberInput;
     private Button nextButton, skipButton;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Intent nextIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_car);
+
         nextIntent = new Intent(this, PreScreen.class);
         skipButton = (Button) findViewById(R.id.skipButton);
         nextButton = (Button) findViewById(R.id.nextButton);
@@ -46,6 +48,7 @@ public class enterCar extends AppCompatActivity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(nextIntent);
             }
         });
@@ -66,9 +69,8 @@ public class enterCar extends AppCompatActivity {
      *
      */
     public void addCarToDB(){
+
             Intent i = getIntent();
-
-
             User user = (User)(i.getSerializableExtra("user"));
 
             String carModel = carModelInput.getText().toString().trim();

@@ -62,7 +62,6 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     private GoogleMap mMap;
     private ActivityRiderMapsBinding binding;
-    private FusedLocationProviderClient mFusedLocationClient;
     private LocationListener locationListener;
     private LocationManager locationManager;
     private ClusterManager<CarClusterMarker> clusterManager;
@@ -73,22 +72,18 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private UserLocation currentUserLocation;
     private BitmapDescriptor icon;
     private ArrayList<CarClusterMarker> mClusterMarkers = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityRiderMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //Intent intent = new Intent(this, ExitService.class);
-        //startService(intent);//attempt to edit db on kill
-
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
-
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
 
@@ -122,20 +117,18 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 currentUserLocation.setGeoPoint(geoPoint);
                 currentUserLocation.setTimestamp(null);
                 db.collection("Riders").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
-
-
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
             }
         };
 
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, locationListener);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -177,19 +170,18 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                             clusterManager.clearItems();
 
                             for (DocumentSnapshot snapshot : snapshotList) {
+
                                 LatLng pls = new LatLng(snapshot.toObject(UserLocation.class).getGeoPoint().getLatitude(), snapshot.toObject(UserLocation.class).getGeoPoint().getLongitude());
                                 UserLocation user = snapshot.toObject(UserLocation.class);
-                               ;
 
                                 if(isTimestampLive(user.getTimestamp())) {
-                                    CarClusterMarker ccm = new CarClusterMarker(pls.latitude, pls.longitude, snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk", user);
 
+                                    CarClusterMarker ccm = new CarClusterMarker(pls.latitude, pls.longitude, snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk", user);
                                     clusterManager.addItem(ccm);
                                     mClusterMarkers.add(ccm);
                                 }else{
 
                                 }
-
                             }
                             clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<CarClusterMarker>() {
                                 @Override
@@ -203,10 +195,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                     bottomSheetDialog.show();
                                     return true;
                                 }
-
                             });
                             clusterManager.cluster();
-
 
                         } else {
                             Log.e("Snapshot Error", "onEvent: query snapshot was null");
@@ -214,6 +204,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                     }
                 });
     }
+
 
   public boolean isTimestampLive(Date date){
 
@@ -225,62 +216,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
           } else {
 
               return false;
-
           }
       }
     return false;
   }
-  /*public void deleteOldMarkers(ClusterManager cm, UserLocation ul){
-
-
-      MarkerManager.Collection userList = cm.getClusterMarkerCollection();
-      ArrayList list = new ArrayList(userList);
-      for(CarClusterMarker ccm : userList){
-          if (ccm.getUser().equals(ul.getUser())){
-              cm.removeItem(ccm);
-          }
-      }
-  }*/
-
-   /* @Override
-    protected void onDestroy() {
-
-        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
-        super.onDestroy();//attempt to edit db on kill
-    }*/
-   /* @Override
-    protected void onResume(){
-        super.onResume();
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                currentUserLocation.setGeoPoint(geoPoint);
-
-                db.collection("Riders").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
-
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-            }
-        };
-        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, locationListener);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-
-        locationManager.removeUpdates(locationListener);
-        db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
-        super.onStop();
-    }*/
 
 
     @Override
@@ -290,7 +229,6 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
         Intent intent = new Intent(this, PreScreen.class);
         startActivity(intent);
-
 
     }
 }

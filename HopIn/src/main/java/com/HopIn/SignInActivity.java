@@ -35,7 +35,9 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sign_in);
+
         mAuth = FirebaseAuth.getInstance();
+
         signInButton = (Button)findViewById(R.id.SignInButton);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
@@ -43,11 +45,13 @@ public class SignInActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+
                 signIn();
             }
         });
 
     }
+
     public void signIn() {
 
         String email = emailEditText.getText().toString().trim();

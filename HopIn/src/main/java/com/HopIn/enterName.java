@@ -28,8 +28,6 @@ public class enterName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_name);
 
-
-
         nextButton = (Button)findViewById(R.id.nextButton);
         firstNameInput = (EditText) findViewById(R.id.firstName);
         lastNameInput = (EditText) findViewById(R.id.lastName);
@@ -50,6 +48,7 @@ public class enterName extends AppCompatActivity {
     }
 
     public void addNameToDB(){
+
         Intent i = getIntent();
         Intent nextIntent = new Intent(this, enterCar.class);
 

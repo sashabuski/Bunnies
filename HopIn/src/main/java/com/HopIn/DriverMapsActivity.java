@@ -45,10 +45,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
     private ActivityDriverMapsBinding binding;
-    private FusedLocationProviderClient mFusedLocationClient;
     private LocationListener locationListener;
     private LocationManager locationManager;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private User currentUser;
@@ -61,29 +59,15 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         binding = ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //Intent intent = new Intent(this, ExitService.class);
-        //startService(intent);//attempt to edit db on kill
-
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
-
-
         currentUserLocation = new UserLocation(currentUser);
 
     }
-
-    /* @Override
-   protected void onDestroy() {
-        locationManager.removeUpdates(locationListener);
-        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
-        super.onDestroy();//attempt to edit db on kill
-    }*/
-
 
     /**
      * Implements a locationListener that sends real time geopoint updates to the driver DB collection
@@ -111,12 +95,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+
                 currentUserLocation.setGeoPoint(geoPoint);
                 currentUserLocation.setTimestamp(null);
-                db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
 
+                db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
@@ -131,39 +117,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
     }
-    /*@Override
-    protected void onStop() {
-        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
 
-        locationManager.removeUpdates(locationListener);
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                currentUserLocation.setGeoPoint(geoPoint);
-
-                db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
-
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-            }
-        };
-        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, locationListener);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @Override
     public void onBackPressed(){//open prompt are you sure?

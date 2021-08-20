@@ -23,14 +23,17 @@ public class UserLocation {
     }
 
     public void setUser(User user) {
+
         this.user = user;
     }
 
     public GeoPoint getGeoPoint() {
+
         return geoPoint;
     }
 
     public void setGeoPoint(GeoPoint geoPoint) {
+
         this.geoPoint = geoPoint;
     }
 
@@ -41,13 +44,6 @@ public class UserLocation {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
-  //  public String getTimestamp() {
-  //      return timestamp;
-   // }
-
-  //  public void setTimestamp(String timestamp) {
-       // this.timestamp = timestamp;
-   // }
 
     public UserLocation(){
 
@@ -56,12 +52,13 @@ public class UserLocation {
     public UserLocation(User user, GeoPoint geoPoint) {
         this.user = user;
         this.geoPoint = geoPoint;
-      //  this.timestamp = timestamp;
+
     }
+
     public UserLocation(User user) {
         this.user = user;
         this.geoPoint = null;
-        //this.timestamp = null;
+
     }
 
 }

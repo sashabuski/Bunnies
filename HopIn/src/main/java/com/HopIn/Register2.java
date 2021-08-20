@@ -35,13 +35,15 @@ public class Register2 extends AppCompatActivity {
     private Button createButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register2);
-        db = FirebaseFirestore.getInstance();
 
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
         createButton = (Button)findViewById(R.id.login);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
@@ -50,16 +52,11 @@ public class Register2 extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+
                 registerUser();
-
-
-                }
-
-
-
-            });
-        }
-
+            }
+        });
+    }
 
     /**
      * Method will only save to db if all input specifications have been passed.
@@ -131,13 +128,14 @@ public class Register2 extends AppCompatActivity {
                                     }
                                 }
                             });
+
                             db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
-                           // intent.putExtra("email", "logged in as: "+email);
                             intent.putExtra("user", user);
                             startActivity(intent);
                         }
                     }
                 });
-    return;}
-
+    return;
     }
+
+}
