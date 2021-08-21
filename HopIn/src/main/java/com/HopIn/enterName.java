@@ -12,6 +12,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+/**
+ * This Activity requests the users name to be entered by the user when registering
+ * their account, and saves it to the User db object.
+ */
 public class enterName extends AppCompatActivity {
 
     private EditText firstNameInput, lastNameInput;
@@ -23,8 +27,6 @@ public class enterName extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_name);
-
-
 
         nextButton = (Button)findViewById(R.id.nextButton);
         firstNameInput = (EditText) findViewById(R.id.firstName);
@@ -46,6 +48,7 @@ public class enterName extends AppCompatActivity {
     }
 
     public void addNameToDB(){
+
         Intent i = getIntent();
         Intent nextIntent = new Intent(this, enterCar.class);
 

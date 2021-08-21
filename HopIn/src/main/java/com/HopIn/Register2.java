@@ -23,19 +23,27 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This register user activity registers a new user with firebase authentication.
+ * Will not accept duplicate emails, will only accept emails ending with "@autuni.ac.nz"
+ * +other input requirements
+ *
+ */
 public class Register2 extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText, repasswordEditText;
     private Button createButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register2);
-        db = FirebaseFirestore.getInstance();
 
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
         createButton = (Button)findViewById(R.id.login);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
@@ -44,33 +52,16 @@ public class Register2 extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+
                 registerUser();
-               /*if() {
+            }
+        });
+    }
 
-                    String email = emailEditText.getText().toString().trim();
-                    String password = passwordEditText.getText().toString().trim();
-
-                    /*Map<String, String> newUser = new HashMap<>();
-                    newUser.put("email", email);
-                    newUser.put("password", password);
-                    newUser.put("firstName", null);
-                    newUser.put("lastName", null);
-                    newUser.put("carModel", null);
-                    newUser.put("carNumber", null);*/
-
-                    //User newUser = new User(email, password);
-
-                }
-
-
-
-            });
-        }
-
-
-
-
-
+    /**
+     * Method will only save to db if all input specifications have been passed.
+     * used in onClickListener
+     */
     public void registerUser() {
 
 
@@ -137,13 +128,14 @@ public class Register2 extends AppCompatActivity {
                                     }
                                 }
                             });
+
                             db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
-                           // intent.putExtra("email", "logged in as: "+email);
                             intent.putExtra("user", user);
                             startActivity(intent);
                         }
                     }
                 });
-    return;}
-
+    return;
     }
+
+}
