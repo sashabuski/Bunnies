@@ -118,7 +118,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 currentUserLocation.setGeoPoint(geoPoint);
                 currentUserLocation.setTimestamp(null);
                 db.collection("Riders").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+
+                   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
 
             }
         };

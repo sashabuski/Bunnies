@@ -13,8 +13,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.HopIn.databinding.ActivityDriverMapsBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -60,7 +67,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private User currentUser;
     private UserLocation currentUserLocation;
     private BitmapDescriptor icon;
-
+    private boolean requested = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +94,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         mMap = googleMap;
 
-        listenForRequests();
+        listenForRequests(mMap );
 
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -113,9 +120,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 currentUserLocation.setTimestamp(null);
 
                 db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
+                if(!requested) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                }
             }
         };
 
@@ -127,7 +134,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
     }
-public void listenForRequests(){
+public void listenForRequests(GoogleMap googleMap){
     FirebaseFirestore.getInstance()
             .collection("Rides")
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -153,6 +160,38 @@ public void listenForRequests(){
 
                                         if (isNewRequest(newRide)) {
                                             //open request pop up
+                                            requested = true;
+                                            LatLng l = new LatLng(newRide.getRider().getGeoPoint().getLatitude(),newRide.getRider().getGeoPoint().getLongitude());
+                                            googleMap.addMarker(new MarkerOptions().position(l).title("fuck"));
+                                            CameraUpdate center = CameraUpdateFactory.newLatLng(l);
+                                            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+                                            googleMap.moveCamera(center);
+                                            googleMap.animateCamera(zoom);
+
+                                            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverMapsActivity.this, R.style.ResponseDialog);
+                                            View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_response_sheet, (LinearLayout)findViewById(R.id.responseSheetContainer));
+                                            TextView a = bottomSheetView.findViewById(R.id.name);
+                                            a.setText(newRide.getRider().getUser().fName);
+                                            bottomSheetDialog.setContentView(bottomSheetView);
+                                            Button acceptButton = (Button)bottomSheetDialog.findViewById(R.id.acceptButton);
+                                            Button declineButton = (Button)bottomSheetDialog.findViewById(R.id.declineButton);
+
+                                            acceptButton.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                }
+                                            });
+
+                                            declineButton.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                }
+                                            });
+
+                                            bottomSheetDialog.show();
+
 
                                         }
                                     }
