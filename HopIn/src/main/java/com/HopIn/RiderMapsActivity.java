@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -192,6 +193,17 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                     TextView a = bottomSheetView.findViewById(R.id.name);
                                     a.setText(item.getUser().getUser().fName+" "+item.getUser().getUser().lName);
                                     bottomSheetDialog.setContentView(bottomSheetView);
+                                    Button button = (Button)bottomSheetDialog.findViewById(R.id.requestButton);
+                                    button.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        Ride ride = new Ride(item.getUser(),currentUserLocation, null);
+                                        db.collection("Rides").add(ride);
+
+                                        }
+                                    });
+
                                     bottomSheetDialog.show();
                                     return true;
                                 }
