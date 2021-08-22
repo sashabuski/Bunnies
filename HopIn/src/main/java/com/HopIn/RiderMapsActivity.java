@@ -32,9 +32,11 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.HopIn.databinding.ActivityRiderMapsBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -96,6 +98,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
         mMap = googleMap;
         getDriversWithRealtimeUpdates(mMap, getCurrentFocus());
+
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -120,8 +123,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 db.collection("Riders").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
 
 
-                   mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
             }
         };
@@ -202,7 +205,15 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                         public void onClick(View view) {
 
                                         Ride ride = new Ride(item.getUser(),currentUserLocation, null);
-                                        db.collection("Rides").add(ride);
+
+                                        db.collection("Rides").add(ride).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                String requestID = documentReference.getId();
+                                                listenForResponse(requestID);
+                                            }
+                                        });
+                                        bottomSheetDialog.hide();
 
                                         }
                                     });
@@ -220,6 +231,79 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 });
     }
 
+    public void listenForResponse(String reqID){
+        FirebaseFirestore.getInstance()
+                .collection("Rides").document(reqID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+
+                    return;
+                }
+                if (value != null) {
+
+                        Ride newRide = value.toObject(Ride.class);
+
+                        if (newRide.getDriver().getUser().email != null && currentUser.email != null) {
+
+                            if (newRide.getRider().getUser().email.equals(currentUser.email)) {
+
+                                if (newRide.getStatus().equals("ACCEPTED")) {
+                                    db.collection("Rides").document(reqID).update("status", "PICKUP");
+                                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
+                                    View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_request_sheet, (LinearLayout)findViewById(R.id.requestSheetContainer));
+                                    TextView a = bottomSheetView.findViewById(R.id.name);
+                                    a.setText("RIDE ACCEPTED");
+                                    bottomSheetDialog.setContentView(bottomSheetView);
+                                    Button button = (Button)bottomSheetDialog.findViewById(R.id.requestButton);
+                                    button.setText("In car");
+                                    bottomSheetDialog.setCancelable(false);
+                                    button.setOnClickListener(new View.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            db.collection("Rides").document(reqID).update("status", "TRANSIT");
+
+                                            bottomSheetDialog.hide();
+
+                                        }
+                                    });
+
+                                    bottomSheetDialog.show();
+
+                                    //open
+                                } else if (newRide.getStatus().equals("DECLINED")) {
+                                //OPEN
+                                    db.collection("Rides").document(reqID).update("status", "TERMINATED");
+
+                                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
+                                    View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_request_sheet, (LinearLayout)findViewById(R.id.requestSheetContainer));
+                                    TextView a = bottomSheetView.findViewById(R.id.name);
+                                    a.setText("RIDE DECLINED");
+                                    bottomSheetDialog.setContentView(bottomSheetView);
+                                    Button button = (Button)bottomSheetDialog.findViewById(R.id.requestButton);
+                                    button.setText("OK");
+
+                                    button.setOnClickListener(new View.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            bottomSheetDialog.hide();
+
+                                        }
+                                    });
+                                    bottomSheetDialog.show();
+                                }
+                            }
+                        }
+
+                }
+            }
+        });
+
+    }
 
   public boolean isTimestampLive(Date date){
 

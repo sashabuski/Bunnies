@@ -40,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
@@ -122,6 +123,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
                 if(!requested) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                 }
             }
         };
@@ -162,7 +164,7 @@ public void listenForRequests(GoogleMap googleMap){
                                             //open request pop up
                                             requested = true;
                                             LatLng l = new LatLng(newRide.getRider().getGeoPoint().getLatitude(),newRide.getRider().getGeoPoint().getLongitude());
-                                            googleMap.addMarker(new MarkerOptions().position(l).title("fuck"));
+                                            googleMap.addMarker(new MarkerOptions().position(l).title("yuck"));
                                             CameraUpdate center = CameraUpdateFactory.newLatLng(l);
                                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                                             googleMap.moveCamera(center);
@@ -175,18 +177,25 @@ public void listenForRequests(GoogleMap googleMap){
                                             bottomSheetDialog.setContentView(bottomSheetView);
                                             Button acceptButton = (Button)bottomSheetDialog.findViewById(R.id.acceptButton);
                                             Button declineButton = (Button)bottomSheetDialog.findViewById(R.id.declineButton);
-
+                                            bottomSheetDialog.setCancelable(false);
                                             acceptButton.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
+                                                db.collection("Rides").document(snapshot.getId()).update("status", "ACCEPTED");
+                                                    System.out.println(snapshot.getId());
+                                                    bottomSheetDialog.hide();
 
+                                                    //start route
                                                 }
                                             });
 
                                             declineButton.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
-
+                                                    db.collection("Rides").document(snapshot.getId()).update("status", "DECLINED");
+                                                    requested = false;
+                                                    googleMap.clear();
+                                                    bottomSheetDialog.hide();
                                                 }
                                             });
 
