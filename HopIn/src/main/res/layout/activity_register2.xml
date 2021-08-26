@@ -5,19 +5,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_pink"
     tools:context=".Register2">
+
+  <ImageView
+      android:id="@+id/imageView2"
+      android:layout_width="142dp"
+      android:layout_height="85dp"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:src="@drawable/pinkwabbit"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.087" />
+
+  <TextView
+      android:layout_width="127dp"
+      android:layout_height="51dp"
+      android:text="Sign Up Now"
+      android:textSize="15dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.559"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.257" />
 
   <EditText
       android:id="@+id/username"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="24dp"
-      android:layout_marginTop="96dp"
+      android:layout_marginTop="240dp"
       android:layout_marginEnd="24dp"
       android:hint="@string/prompt_email"
       android:inputType="textEmailAddress"
       android:selectAllOnFocus="true"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,16 +80,20 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/username" />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/login"
       android:layout_width="293dp"
       android:layout_height="50dp"
-      android:text="Create Account"
+      android:background="@drawable/rounded_button"
+      android:color="@color/dark_pink"
+      android:text="Sign Up"
+      android:textColor="@color/white"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.428" />
+      app:layout_constraintVertical_bias="0.622"
+      tools:ignore="MissingConstraints" />
 
   <ProgressBar
       android:id="@+id/loading"
@@ -80,4 +111,4 @@
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintVertical_bias="0.3" />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
