@@ -2,6 +2,7 @@ package com.HopIn;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -69,6 +70,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private UserLocation currentUserLocation;
     private BitmapDescriptor icon;
     private boolean requested = false;
+    private ConstraintLayout cl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
+        cl = findViewById(R.id.constraintLayout);
+        cl.setVisibility(View.GONE);
 
     }
 
@@ -116,7 +121,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-
+                currentUserLocation.setBearing(location.getBearing());
                 currentUserLocation.setGeoPoint(geoPoint);
                 currentUserLocation.setTimestamp(null);
 
@@ -130,7 +135,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 2, locationListener);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -170,21 +175,29 @@ public void listenForRequests(GoogleMap googleMap){
                                             googleMap.moveCamera(center);
                                             googleMap.animateCamera(zoom);
 
-                                            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverMapsActivity.this, R.style.ResponseDialog);
+
+
+                                           /* BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverMapsActivity.this, R.style.ResponseDialog);
                                             View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_response_sheet, (LinearLayout)findViewById(R.id.responseSheetContainer));
                                             TextView a = bottomSheetView.findViewById(R.id.name);
                                             a.setText(newRide.getRider().getUser().fName);
                                             bottomSheetDialog.setContentView(bottomSheetView);
                                             Button acceptButton = (Button)bottomSheetDialog.findViewById(R.id.acceptButton);
                                             Button declineButton = (Button)bottomSheetDialog.findViewById(R.id.declineButton);
-                                            bottomSheetDialog.setCancelable(false);
+                                            bottomSheetDialog.setCancelable(false);*/
+                                            Button acceptButton = (Button)findViewById(R.id.acceptButton);
+                                            Button declineButton = (Button)findViewById(R.id.declineButton);
+                                            TextView a = findViewById(R.id.textView);
+                                            a.setText(newRide.getRider().getUser().fName+" "+newRide.getRider().getUser().lName);
                                             acceptButton.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
                                                 db.collection("Rides").document(snapshot.getId()).update("status", "ACCEPTED");
                                                     System.out.println(snapshot.getId());
-                                                    bottomSheetDialog.hide();
-
+                                                    cl.setVisibility(View.GONE);
+                                                   LatLng a = new LatLng(currentUserLocation.getGeoPoint().getLatitude(),currentUserLocation.getGeoPoint().getLongitude());
+                                                    CameraUpdate center = CameraUpdateFactory.newLatLng(a);
+                                                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                                                     //start route
                                                 }
                                             });
@@ -195,11 +208,11 @@ public void listenForRequests(GoogleMap googleMap){
                                                     db.collection("Rides").document(snapshot.getId()).update("status", "DECLINED");
                                                     requested = false;
                                                     googleMap.clear();
-                                                    bottomSheetDialog.hide();
+                                                    cl.setVisibility(View.GONE);
                                                 }
                                             });
 
-                                            bottomSheetDialog.show();
+                                            cl.setVisibility(View.VISIBLE);
 
 
                                         }

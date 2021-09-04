@@ -2,6 +2,7 @@ package com.HopIn;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -18,9 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,12 +29,9 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.HopIn.databinding.ActivityRiderMapsBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,10 +41,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.collections.MarkerManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -75,6 +70,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private UserLocation currentUserLocation;
     private BitmapDescriptor icon;
     private ArrayList<CarClusterMarker> mClusterMarkers = new ArrayList<>();
+    private ConstraintLayout hopInCL;
+    private ConstraintLayout inCarCL;
+    private ConstraintLayout declinedCL;
+    private Button completeRide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +88,17 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
+        hopInCL = findViewById(R.id.hopInConstraintLayout);
+        hopInCL.setVisibility(View.GONE);
 
+        inCarCL = findViewById(R.id.inCarConstraintLayout);
+        inCarCL.setVisibility(View.GONE);
+
+        declinedCL = findViewById(R.id.declinedConstraintLayout);
+        declinedCL.setVisibility(View.GONE);
+
+        completeRide = findViewById(R.id.completeRideButton);
+        completeRide.setVisibility(View.GONE);
     }
 
 
@@ -111,7 +120,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
             return;
         }
         googleMap.setMyLocationEnabled(true);
-
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -123,8 +132,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 db.collection("Riders").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
 
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+
 
             }
         };
@@ -184,6 +193,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                 if(isTimestampLive(user.getTimestamp())) {
 
                                     CarClusterMarker ccm = new CarClusterMarker(pls.latitude, pls.longitude, snapshot.toObject(UserLocation.class).getUser().fName, "jkjkjk", user);
+                                    
                                     clusterManager.addItem(ccm);
                                     mClusterMarkers.add(ccm);
                                 }else{
@@ -193,13 +203,18 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                             clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<CarClusterMarker>() {
                                 @Override
                                 public boolean onClusterItemClick(CarClusterMarker item) {
+                                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(item.getPosition()));
+                                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-                                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
+                                    /*BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
                                     View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_request_sheet, (LinearLayout)findViewById(R.id.requestSheetContainer));
                                     TextView a = bottomSheetView.findViewById(R.id.name);
                                     a.setText(item.getUser().getUser().fName+" "+item.getUser().getUser().lName);
                                     bottomSheetDialog.setContentView(bottomSheetView);
-                                    Button button = (Button)bottomSheetDialog.findViewById(R.id.requestButton);
+*/
+                                    TextView a = findViewById(R.id.name);
+                                    a.setText(item.getUser().getUser().fName+" "+item.getUser().getUser().lName);
+                                    Button button = (Button)findViewById(R.id.requestButton);
                                     button.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -209,16 +224,18 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                         db.collection("Rides").add(ride).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
+                                                Toast.makeText(RiderMapsActivity.this, "Request Sent", Toast.LENGTH_LONG).show();
                                                 String requestID = documentReference.getId();
                                                 listenForResponse(requestID);
+
                                             }
                                         });
-                                        bottomSheetDialog.hide();
+                                            hopInCL.setVisibility(View.GONE);
 
                                         }
                                     });
 
-                                    bottomSheetDialog.show();
+                                    hopInCL.setVisibility(View.VISIBLE);
                                     return true;
                                 }
                             });
@@ -250,14 +267,18 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                                 if (newRide.getStatus().equals("ACCEPTED")) {
                                     db.collection("Rides").document(reqID).update("status", "PICKUP");
-                                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
+                                    /*BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
                                     View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_request_sheet, (LinearLayout)findViewById(R.id.requestSheetContainer));
                                     TextView a = bottomSheetView.findViewById(R.id.name);
                                     a.setText("RIDE ACCEPTED");
                                     bottomSheetDialog.setContentView(bottomSheetView);
-                                    Button button = (Button)bottomSheetDialog.findViewById(R.id.requestButton);
+
                                     button.setText("In car");
                                     bottomSheetDialog.setCancelable(false);
+                                   */
+                                    TextView a = findViewById(R.id.name2);
+                                    a.setText(newRide.getDriver().getUser().fName+" "+newRide.getDriver().getUser().lName+" has accepted your request");
+                                    Button button = findViewById(R.id.inCarButton);
                                     button.setOnClickListener(new View.OnClickListener() {
 
                                         @Override
@@ -265,36 +286,39 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                                             db.collection("Rides").document(reqID).update("status", "TRANSIT");
 
-                                            bottomSheetDialog.hide();
+                                            inCarCL.setVisibility(View.GONE);
 
+                                            completeRide.setVisibility(View.VISIBLE);
                                         }
                                     });
 
-                                    bottomSheetDialog.show();
+                                    inCarCL.setVisibility(View.VISIBLE);
 
                                     //open
                                 } else if (newRide.getStatus().equals("DECLINED")) {
                                 //OPEN
                                     db.collection("Rides").document(reqID).update("status", "TERMINATED");
 
-                                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
+                                   /* BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(RiderMapsActivity.this, R.style.BottomSheetDialogTheme);
                                     View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_request_sheet, (LinearLayout)findViewById(R.id.requestSheetContainer));
                                     TextView a = bottomSheetView.findViewById(R.id.name);
                                     a.setText("RIDE DECLINED");
-                                    bottomSheetDialog.setContentView(bottomSheetView);
-                                    Button button = (Button)bottomSheetDialog.findViewById(R.id.requestButton);
-                                    button.setText("OK");
+                                    bottomSheetDialog.setContentView(bottomSheetView);*/
+
+
+                                    Button button = findViewById(R.id.okButton);
+
 
                                     button.setOnClickListener(new View.OnClickListener() {
 
                                         @Override
                                         public void onClick(View view) {
 
-                                            bottomSheetDialog.hide();
+                                            declinedCL.setVisibility(View.GONE);
 
                                         }
                                     });
-                                    bottomSheetDialog.show();
+                                    declinedCL.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
@@ -323,11 +347,16 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onBackPressed(){//open prompt are you sure?
+if(hopInCL.getVisibility() == View.VISIBLE)
+{
+    hopInCL.setVisibility(View.GONE);
+}else{
+    locationManager.removeUpdates(locationListener);
+    db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
+    Intent intent = new Intent(this, PreScreen.class);
+    startActivity(intent);
+}
 
-        locationManager.removeUpdates(locationListener);
-        db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
-        Intent intent = new Intent(this, PreScreen.class);
-        startActivity(intent);
 
     }
 }

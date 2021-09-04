@@ -1,9 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RiderMapsActivity" />
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.0"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintVertical_bias="0.0"
+        tools:context=".MapsActivity" />
+
+    <Button
+        android:id="@+id/completeRideButton"
+        android:layout_width="299dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginRight="57dp"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/button_round"
+        android:text="Complete Ride"
+        android:textColor="@android:color/white"
+        map:backgroundTint="#FF5072"
+        map:layout_constraintBottom_toBottomOf="@+id/map"
+        map:layout_constraintEnd_toEndOf="@+id/map"
+        map:layout_constraintStart_toStartOf="@+id/map" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/declinedConstraintLayout"
+        android:layout_width="375dp"
+        android:layout_height="135dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/layout_bg"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/okButton"
+            android:layout_width="299dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_round"
+            android:text="OK"
+            android:textColor="@android:color/white"
+            map:backgroundTint="#FF5072"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintVertical_bias="0.627" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="52dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginLeft="42dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="84dp"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintEnd_toStartOf="@+id/textView3"
+            map:layout_constraintHorizontal_bias="0.7"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="8dp"
+            map:layout_constraintBottom_toTopOf="@+id/okButton"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintStart_toEndOf="@+id/imageButton3"
+            map:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+
+        android:id="@+id/inCarConstraintLayout"
+        android:layout_width="375dp"
+        android:layout_height="135dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/layout_bg"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/inCarButton"
+            android:layout_width="299dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_round"
+            android:text="IN Car"
+            android:textColor="@android:color/white"
+            map:backgroundTint="#FF5072"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintVertical_bias="0.627" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="52dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginLeft="42dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="84dp"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintEnd_toStartOf="@+id/name2"
+            map:layout_constraintHorizontal_bias="0.7"
+            map:layout_constraintStart_toStartOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/name2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="8dp"
+            map:layout_constraintBottom_toTopOf="@+id/inCarButton"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintStart_toEndOf="@+id/imageButton2"
+            map:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hopInConstraintLayout"
+        android:layout_width="379dp"
+        android:layout_height="208dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginBottom="25dp"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/layout_bg"
+        android:elevation="8dp"
+        android:padding="4dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent">
+
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="68dp"
+            android:layout_height="58dp"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintHorizontal_bias="0.514"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintVertical_bias="0.213"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="95dp"
+            android:layout_marginBottom="7dp"
+            android:text=""
+            map:layout_constraintBottom_toTopOf="@+id/requestButton"
+            map:layout_constraintEnd_toStartOf="@+id/imageButton"
+            map:layout_constraintStart_toStartOf="@+id/imageButton"
+            map:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/requestButton"
+            android:layout_width="303dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginEnd="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/button_round"
+            android:text="Hop in"
+            android:textColor="@android:color/white"
+            map:backgroundTint="#FF5072"
+            map:layout_constraintBottom_toBottomOf="parent"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toBottomOf="@+id/name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
