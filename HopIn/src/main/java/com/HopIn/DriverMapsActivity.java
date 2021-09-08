@@ -84,6 +84,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private   Button acceptBut;
     private View bottomSheetView;
     private BottomSheetBehavior bottomSheetBehavior;
+    private Animation animFadeIn;
+    private Animation animFadeOut;
+    private TextView requestText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,13 +98,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
+
         bottomSheetView = (View)findViewById(R.id.driverBottomSheet);
-        if (bottomSheetView == null)
-        {
-            System.out.println("LALALLALALALALLALLLALA");
-        }
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
+
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
 
@@ -119,13 +124,14 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
             }
         });
-        //cl = findViewById(R.id.constraintLayout);
-        //  cl.setVisibility(View.GONE);
+
            declineBut = findViewById(R.id.declineButton);
            acceptBut = findViewById(R.id.acceptButton);
            declineBut.setVisibility(View.GONE);
            acceptBut.setVisibility(View.GONE);
-           findViewById(R.id.requestText).setVisibility(View.GONE);
+           requestText = findViewById(R.id.requestText);
+
+           requestText.setVisibility(View.GONE);
            findViewById(R.id.onTheWay).setVisibility(View.GONE);
            findViewById(R.id.arrivedButton).setVisibility(View.GONE);
            findViewById(R.id.arriveTip).setVisibility(View.GONE);
@@ -211,89 +217,43 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                 if (newRide.getDriver().getUser().email.equals(currentUser.email)) {
 
                                     if (newRide.getStatus().equals("REQUESTED")) {
-                                        System.out.println("huhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuuhuhhuhuhu");
+
                                         if (isNewRequest(newRide)) {
-                                            //open request pop up
+
                                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                             requested = true;
                                             LatLng l = new LatLng(newRide.getRider().getGeoPoint().getLatitude(),newRide.getRider().getGeoPoint().getLongitude());
-                                            googleMap.addMarker(new MarkerOptions().position(l).title("yuck"));
+                                            googleMap.addMarker(new MarkerOptions().position(l).title(newRide.getRider().getUser().fName));
                                             CameraUpdate center = CameraUpdateFactory.newLatLng(l);
                                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                                             googleMap.moveCamera(center);
                                             googleMap.animateCamera(zoom);
-
-
-
-                                           /* BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(DriverMapsActivity.this, R.style.ResponseDialog);
-                                            View bottomSheetView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_response_sheet, (LinearLayout)findViewById(R.id.responseSheetContainer));
-                                            TextView a = bottomSheetView.findViewById(R.id.name);
-                                            a.setText(newRide.getRider().getUser().fName);
-                                            bottomSheetDialog.setContentView(bottomSheetView);
-                                            Button acceptButton = (Button)bottomSheetDialog.findViewById(R.id.acceptButton);
-                                            Button declineButton = (Button)bottomSheetDialog.findViewById(R.id.declineButton);
-                                            bottomSheetDialog.setCancelable(false);*/
-                                            Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-                                            Animation animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
-
-                                            findViewById(R.id.requestPic).startAnimation(animFadeIn);
-                                            findViewById(R.id.requestPic).setVisibility(View.VISIBLE);
-                                            acceptBut.startAnimation(animFadeIn);
-                                            acceptBut.setVisibility(View.VISIBLE);
-                                            declineBut.startAnimation(animFadeIn);
-                                            declineBut.setVisibility(View.VISIBLE);
-                                            TextView requestText = findViewById(R.id.requestText);
-                                            requestText.setText("New ride request from "+newRide.getRider().getUser().fName+"!");
-                                            requestText.startAnimation(animFadeIn);
-                                            requestText.setVisibility(View.VISIBLE);
+                                            //
+                                            showRequestDisplay(newRide);
+                                            //
                                             acceptBut.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
                                                 db.collection("Rides").document(snapshot.getId()).update("status", "ACCEPTED");
                                                     System.out.println(snapshot.getId());
 
-                                                   LatLng a = new LatLng(currentUserLocation.getGeoPoint().getLatitude(),currentUserLocation.getGeoPoint().getLongitude());
-                                                    findViewById(R.id.requestPic).startAnimation(animFadeOut);
-                                                    findViewById(R.id.requestPic).setVisibility(View.GONE);
-                                                    requestText.startAnimation(animFadeOut);
-                                                    requestText.setVisibility(View.GONE);
-                                                    acceptBut.startAnimation(animFadeOut);
-                                                    acceptBut.setVisibility(View.GONE);
-                                                    declineBut.startAnimation(animFadeOut);
-                                                    declineBut.setVisibility(View.GONE);
-                                                    CameraUpdate center = CameraUpdateFactory.newLatLng(a);
-                                                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+                                                    LatLng a = new LatLng(currentUserLocation.getGeoPoint().getLatitude(),currentUserLocation.getGeoPoint().getLongitude());
 
+                                                    hideRequestDisplay();
+                                                    //
 
                                                     findViewById(R.id.arrivedButton).setOnClickListener(new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View view) {
                                                             db.collection("Rides").document(snapshot.getId()).update("status", "ARRIVED");
-
-                                                            findViewById(R.id.arriveTip).startAnimation(animFadeOut);
-                                                            findViewById(R.id.arriveTip).setVisibility(View.GONE);
-                                                            findViewById(R.id.arrivedButton).startAnimation(animFadeOut);
-                                                            findViewById(R.id.arrivedButton).setVisibility(View.GONE);
-
-                                                            requestText.startAnimation(animFadeOut);
-                                                            requestText.setVisibility(View.GONE);
-                                                            findViewById(R.id.onTheWay).startAnimation(animFadeOut);
-                                                            findViewById(R.id.onTheWay).setVisibility(View.GONE);
-
+//
+                                                            arrivedButtonDisplayChange();
+//
                                                         }
                                                     });
 
+                                                   showOnRouteDisplay(newRide);
 
-                                                    findViewById(R.id.arriveTip).startAnimation(animFadeIn);
-                                                    findViewById(R.id.arriveTip).setVisibility(View.VISIBLE);
-                                                    findViewById(R.id.arrivedButton).startAnimation(animFadeIn);
-                                                    findViewById(R.id.arrivedButton).setVisibility(View.VISIBLE);
-                                                    requestText.setText("On route to "+newRide.getRider().getUser().fName+"!");
-                                                    requestText.startAnimation(animFadeIn);
-                                                    requestText.setVisibility(View.VISIBLE);
-                                                    findViewById(R.id.onTheWay).startAnimation(animFadeIn);
-                                                    findViewById(R.id.onTheWay).setVisibility(View.VISIBLE);
-                                                    //start route
                                                 }
                                             });
 
@@ -309,14 +269,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                                     declineBut.setVisibility(View.GONE);
                                                 }
                                             });
-
-
-
-
-                                        }
+                                       }
                                     }
                                 }
-
                             }
                         }
                     }
@@ -324,7 +279,61 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             });
     }
 
-public boolean isNewRequest(Ride newRide){
+
+   public void showOnRouteDisplay(Ride newRide){
+
+       findViewById(R.id.arriveTip).startAnimation(animFadeIn);
+       findViewById(R.id.arriveTip).setVisibility(View.VISIBLE);
+       findViewById(R.id.arrivedButton).startAnimation(animFadeIn);
+       findViewById(R.id.arrivedButton).setVisibility(View.VISIBLE);
+       requestText.setText("On route to "+newRide.getRider().getUser().fName+"!");
+       requestText.startAnimation(animFadeIn);
+       requestText.setVisibility(View.VISIBLE);
+       findViewById(R.id.onTheWay).startAnimation(animFadeIn);
+       findViewById(R.id.onTheWay).setVisibility(View.VISIBLE);
+   }
+
+
+    public void arrivedButtonDisplayChange(){
+
+       findViewById(R.id.arriveTip).startAnimation(animFadeOut);
+       findViewById(R.id.arriveTip).setVisibility(View.GONE);
+       findViewById(R.id.arrivedButton).startAnimation(animFadeOut);
+       findViewById(R.id.arrivedButton).setVisibility(View.GONE);
+
+       requestText.startAnimation(animFadeOut);
+       requestText.setVisibility(View.GONE);
+       findViewById(R.id.onTheWay).startAnimation(animFadeOut);
+       findViewById(R.id.onTheWay).setVisibility(View.GONE);
+   }
+
+
+    public void showRequestDisplay(Ride newRide){
+
+       findViewById(R.id.requestPic).startAnimation(animFadeIn);
+       findViewById(R.id.requestPic).setVisibility(View.VISIBLE);
+       acceptBut.startAnimation(animFadeIn);
+       acceptBut.setVisibility(View.VISIBLE);
+       declineBut.startAnimation(animFadeIn);
+       declineBut.setVisibility(View.VISIBLE);
+
+       requestText.setText("New ride request from "+newRide.getRider().getUser().fName+"!");
+       requestText.startAnimation(animFadeIn);
+       requestText.setVisibility(View.VISIBLE);
+   }
+
+    public void hideRequestDisplay() {
+        findViewById(R.id.requestPic).startAnimation(animFadeOut);
+        findViewById(R.id.requestPic).setVisibility(View.GONE);
+        requestText.startAnimation(animFadeOut);
+        requestText.setVisibility(View.GONE);
+        acceptBut.startAnimation(animFadeOut);
+        acceptBut.setVisibility(View.GONE);
+        declineBut.startAnimation(animFadeOut);
+        declineBut.setVisibility(View.GONE);
+    }
+
+    public boolean isNewRequest(Ride newRide){
 
                     Date liveTime = new Date(System.currentTimeMillis() - 10000);
     if (newRide.getTimestamp() != null) {
@@ -337,7 +346,6 @@ public boolean isNewRequest(Ride newRide){
     return false;
 
 }
-
 
     public void updateAndZoomLocation(GoogleMap mMap, FusedLocationProviderClient fusedLocation) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -366,5 +374,7 @@ public boolean isNewRequest(Ride newRide){
         }
 
     }
+
+
 
 }
