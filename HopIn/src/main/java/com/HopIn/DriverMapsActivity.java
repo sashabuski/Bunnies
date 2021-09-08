@@ -16,11 +16,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +36,10 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.HopIn.databinding.ActivityDriverMapsBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +52,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.List;
@@ -71,7 +79,11 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private BitmapDescriptor icon;
     private boolean requested = false;
     private ConstraintLayout cl;
-
+    private FusedLocationProviderClient fusedLocation;
+    private Button declineBut;
+    private   Button acceptBut;
+    private View bottomSheetView;
+    private BottomSheetBehavior bottomSheetBehavior;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,11 +94,42 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        bottomSheetView = (View)findViewById(R.id.driverBottomSheet);
+        if (bottomSheetView == null)
+        {
+            System.out.println("LALALLALALALALLALLLALA");
+        }
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
-        cl = findViewById(R.id.constraintLayout);
-        cl.setVisibility(View.GONE);
+
+        fusedLocation = LocationServices.getFusedLocationProviderClient(DriverMapsActivity.this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        fusedLocation.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Location> task) {
+                GeoPoint geoPoint = new GeoPoint(task.getResult().getLatitude(), task.getResult().getLongitude());
+                currentUserLocation.setBearing(task.getResult().getBearing());
+                currentUserLocation.setGeoPoint(geoPoint);
+                currentUserLocation.setTimestamp(null);
+                db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
+            }
+        });
+        //cl = findViewById(R.id.constraintLayout);
+        //  cl.setVisibility(View.GONE);
+           declineBut = findViewById(R.id.declineButton);
+           acceptBut = findViewById(R.id.acceptButton);
+           declineBut.setVisibility(View.GONE);
+           acceptBut.setVisibility(View.GONE);
+           findViewById(R.id.requestText).setVisibility(View.GONE);
+           findViewById(R.id.onTheWay).setVisibility(View.GONE);
+           findViewById(R.id.arrivedButton).setVisibility(View.GONE);
+           findViewById(R.id.arriveTip).setVisibility(View.GONE);
+           findViewById(R.id.requestPic).setVisibility(View.GONE);
 
     }
 
@@ -114,6 +157,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             return;
         }
         googleMap.setMyLocationEnabled(true);
+        updateAndZoomLocation(mMap, fusedLocation);
+
 
         locationListener = new LocationListener() {
             @Override
@@ -141,7 +186,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
 
     }
-public void listenForRequests(GoogleMap googleMap){
+
+
+    public void listenForRequests(GoogleMap googleMap){
     FirebaseFirestore.getInstance()
             .collection("Rides")
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -164,9 +211,10 @@ public void listenForRequests(GoogleMap googleMap){
                                 if (newRide.getDriver().getUser().email.equals(currentUser.email)) {
 
                                     if (newRide.getStatus().equals("REQUESTED")) {
-
+                                        System.out.println("huhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuhuuhuhhuhuhu");
                                         if (isNewRequest(newRide)) {
                                             //open request pop up
+                                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                             requested = true;
                                             LatLng l = new LatLng(newRide.getRider().getGeoPoint().getLatitude(),newRide.getRider().getGeoPoint().getLongitude());
                                             googleMap.addMarker(new MarkerOptions().position(l).title("yuck"));
@@ -185,34 +233,84 @@ public void listenForRequests(GoogleMap googleMap){
                                             Button acceptButton = (Button)bottomSheetDialog.findViewById(R.id.acceptButton);
                                             Button declineButton = (Button)bottomSheetDialog.findViewById(R.id.declineButton);
                                             bottomSheetDialog.setCancelable(false);*/
-                                            Button acceptButton = (Button)findViewById(R.id.acceptButton);
-                                            Button declineButton = (Button)findViewById(R.id.declineButton);
-                                            TextView a = findViewById(R.id.textView);
-                                            a.setText(newRide.getRider().getUser().fName+" "+newRide.getRider().getUser().lName);
-                                            acceptButton.setOnClickListener(new View.OnClickListener() {
+                                            Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+                                            Animation animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_out);
+
+                                            findViewById(R.id.requestPic).startAnimation(animFadeIn);
+                                            findViewById(R.id.requestPic).setVisibility(View.VISIBLE);
+                                            acceptBut.startAnimation(animFadeIn);
+                                            acceptBut.setVisibility(View.VISIBLE);
+                                            declineBut.startAnimation(animFadeIn);
+                                            declineBut.setVisibility(View.VISIBLE);
+                                            TextView requestText = findViewById(R.id.requestText);
+                                            requestText.setText("New ride request from "+newRide.getRider().getUser().fName+"!");
+                                            requestText.startAnimation(animFadeIn);
+                                            requestText.setVisibility(View.VISIBLE);
+                                            acceptBut.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
                                                 db.collection("Rides").document(snapshot.getId()).update("status", "ACCEPTED");
                                                     System.out.println(snapshot.getId());
-                                                    cl.setVisibility(View.GONE);
+
                                                    LatLng a = new LatLng(currentUserLocation.getGeoPoint().getLatitude(),currentUserLocation.getGeoPoint().getLongitude());
+                                                    findViewById(R.id.requestPic).startAnimation(animFadeOut);
+                                                    findViewById(R.id.requestPic).setVisibility(View.GONE);
+                                                    requestText.startAnimation(animFadeOut);
+                                                    requestText.setVisibility(View.GONE);
+                                                    acceptBut.startAnimation(animFadeOut);
+                                                    acceptBut.setVisibility(View.GONE);
+                                                    declineBut.startAnimation(animFadeOut);
+                                                    declineBut.setVisibility(View.GONE);
                                                     CameraUpdate center = CameraUpdateFactory.newLatLng(a);
                                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+
+                                                    findViewById(R.id.arrivedButton).setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            db.collection("Rides").document(snapshot.getId()).update("status", "ARRIVED");
+
+                                                            findViewById(R.id.arriveTip).startAnimation(animFadeOut);
+                                                            findViewById(R.id.arriveTip).setVisibility(View.GONE);
+                                                            findViewById(R.id.arrivedButton).startAnimation(animFadeOut);
+                                                            findViewById(R.id.arrivedButton).setVisibility(View.GONE);
+
+                                                            requestText.startAnimation(animFadeOut);
+                                                            requestText.setVisibility(View.GONE);
+                                                            findViewById(R.id.onTheWay).startAnimation(animFadeOut);
+                                                            findViewById(R.id.onTheWay).setVisibility(View.GONE);
+
+                                                        }
+                                                    });
+
+
+                                                    findViewById(R.id.arriveTip).startAnimation(animFadeIn);
+                                                    findViewById(R.id.arriveTip).setVisibility(View.VISIBLE);
+                                                    findViewById(R.id.arrivedButton).startAnimation(animFadeIn);
+                                                    findViewById(R.id.arrivedButton).setVisibility(View.VISIBLE);
+                                                    requestText.setText("On route to "+newRide.getRider().getUser().fName+"!");
+                                                    requestText.startAnimation(animFadeIn);
+                                                    requestText.setVisibility(View.VISIBLE);
+                                                    findViewById(R.id.onTheWay).startAnimation(animFadeIn);
+                                                    findViewById(R.id.onTheWay).setVisibility(View.VISIBLE);
                                                     //start route
                                                 }
                                             });
 
-                                            declineButton.setOnClickListener(new View.OnClickListener() {
+                                            declineBut.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
                                                     db.collection("Rides").document(snapshot.getId()).update("status", "DECLINED");
                                                     requested = false;
                                                     googleMap.clear();
-                                                    cl.setVisibility(View.GONE);
+                                                    acceptBut.startAnimation(animFadeOut);
+                                                    acceptBut.setVisibility(View.GONE);
+                                                    declineBut.startAnimation(animFadeOut);
+                                                    declineBut.setVisibility(View.GONE);
                                                 }
                                             });
 
-                                            cl.setVisibility(View.VISIBLE);
+
 
 
                                         }
@@ -228,7 +326,7 @@ public void listenForRequests(GoogleMap googleMap){
 
 public boolean isNewRequest(Ride newRide){
 
-                    Date liveTime = new Date(System.currentTimeMillis()- 5000);
+                    Date liveTime = new Date(System.currentTimeMillis() - 10000);
     if (newRide.getTimestamp() != null) {
         if (newRide.getTimestamp().after(liveTime)) {
             return true;
@@ -241,15 +339,32 @@ public boolean isNewRequest(Ride newRide){
 }
 
 
+    public void updateAndZoomLocation(GoogleMap mMap, FusedLocationProviderClient fusedLocation) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            return;
+        }
+        fusedLocation.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Location> task) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom((new LatLng(task.getResult().getLatitude(), task.getResult().getLongitude())), 15));
+
+            }
+        });
+
+    }
 
     @Override
     public void onBackPressed(){//open prompt are you sure?
-        locationManager.removeUpdates(locationListener);
-        db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
-        Intent intent = new Intent(this, PreScreen.class);
-        startActivity(intent);
-
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            locationManager.removeUpdates(locationListener);
+            db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
+            Intent intent = new Intent(this, PreScreen.class);
+            startActivity(intent);
+        }
 
     }
+
 }
