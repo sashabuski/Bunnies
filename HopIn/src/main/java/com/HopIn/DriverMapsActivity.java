@@ -87,6 +87,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private Animation animFadeIn;
     private Animation animFadeOut;
     private TextView requestText;
+    private Button passager_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,8 +138,20 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
            findViewById(R.id.arriveTip).setVisibility(View.GONE);
            findViewById(R.id.requestPic).setVisibility(View.GONE);
 
-    }
+           passager_info = (Button) findViewById(R.id.passager_info);
 
+           passager_info.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   openactivity_passager_Detail();
+               }
+           });
+
+    }
+            public void openactivity_passager_Detail(){
+                Intent intent = new Intent(this, activity_passager_Details.class);
+                startActivity(intent);
+            }
     /**
      * Implements a locationListener that sends real time geopoint updates to the driver DB collection
      *
