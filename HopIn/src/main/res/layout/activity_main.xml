@@ -76,34 +76,37 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.109" />
 
-    <android.widget.Button
+    <Button
         android:id="@+id/SignInButton"
         android:layout_width="293dp"
         android:layout_height="50dp"
         android:background="@drawable/rounded_button_light_pink"
         android:color="@color/light_pink"
         android:text="Sign In"
-        android:textColor="@color/dark_pink"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/dark_pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+         />
 
-    <android.widget.Button
-        android:id="@+id/SignUpButton"
+    <Button
+        android:id="@+id/createAccountButton"
         android:layout_width="293dp"
         android:layout_height="50dp"
         android:background="@drawable/rounded_button"
         android:color="@color/dark_pink"
-        android:text="Create account"
+        android:text="Create Account"
+        android:textAllCaps="false"
         android:textColor="@color/white"
+        app:backgroundTint="@color/dark_pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.603"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.603" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
