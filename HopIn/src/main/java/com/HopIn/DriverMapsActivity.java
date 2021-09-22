@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -86,8 +87,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation animFadeIn;
     private Animation animFadeOut;
-    private TextView requestText;
-
+    private TextView requestText, welcomeText, welcomeTip;
+    private LottieAnimationView carDriving;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,17 +126,19 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
-           declineBut = findViewById(R.id.declineButton);
-           acceptBut = findViewById(R.id.acceptButton);
-           declineBut.setVisibility(View.GONE);
-           acceptBut.setVisibility(View.GONE);
-           requestText = findViewById(R.id.requestText);
-
-           requestText.setVisibility(View.GONE);
-           findViewById(R.id.onTheWay).setVisibility(View.GONE);
-           findViewById(R.id.arrivedButton).setVisibility(View.GONE);
-           findViewById(R.id.arriveTip).setVisibility(View.GONE);
-           findViewById(R.id.requestPic).setVisibility(View.GONE);
+         welcomeTip = findViewById(R.id.welcomeTip);
+         welcomeText = findViewById(R.id.welcomeText);
+         declineBut = findViewById(R.id.declineButton);
+         acceptBut = findViewById(R.id.acceptButton);
+         declineBut.setVisibility(View.GONE);
+         acceptBut.setVisibility(View.GONE);
+         requestText = findViewById(R.id.requestText);
+         carDriving = findViewById(R.id.carDriving);
+         requestText.setVisibility(View.GONE);
+         findViewById(R.id.onTheWay).setVisibility(View.GONE);
+         findViewById(R.id.arrivedButton).setVisibility(View.GONE);
+         findViewById(R.id.arriveTip).setVisibility(View.GONE);
+         findViewById(R.id.requestPic).setVisibility(View.GONE);
 
     }
 
@@ -150,7 +153,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mMap = googleMap;
 
         listenForRequests(mMap );
-
+        welcomeText.setText("Good Morning "+currentUser.fName+".");
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -228,8 +232,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                                             googleMap.moveCamera(center);
                                             googleMap.animateCamera(zoom);
+
+                                            hideWelcomeDisplay();
+
                                             //
                                             showRequestDisplay(newRide);
+
                                             //
                                             acceptBut.setOnClickListener(new View.OnClickListener() {
                                                 @Override
@@ -246,7 +254,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                                         @Override
                                                         public void onClick(View view) {
                                                             db.collection("Rides").document(snapshot.getId()).update("status", "ARRIVED");
-//
+                                                            googleMap.clear();
                                                             arrivedButtonDisplayChange();
 //
                                                         }
@@ -308,6 +316,16 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
    }
 
 
+   public void hideWelcomeDisplay(){
+       welcomeTip.startAnimation(animFadeOut);
+       welcomeTip.setVisibility(View.GONE);
+       welcomeText.startAnimation(animFadeOut);
+       welcomeText.setVisibility(View.GONE);
+       carDriving.startAnimation(animFadeOut);
+       carDriving.setVisibility(View.GONE);
+
+   }
+
     public void showRequestDisplay(Ride newRide){
 
        findViewById(R.id.requestPic).startAnimation(animFadeIn);
@@ -320,6 +338,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
        requestText.setText("New ride request from "+newRide.getRider().getUser().fName+"!");
        requestText.startAnimation(animFadeIn);
        requestText.setVisibility(View.VISIBLE);
+
    }
 
     public void hideRequestDisplay() {

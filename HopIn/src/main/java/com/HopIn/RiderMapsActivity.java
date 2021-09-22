@@ -408,7 +408,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                         if (newRide.getRider().getUser().email.equals(currentUser.email)) {
 
                             if (newRide.getStatus().equals("ARRIVED")) {
-
+                                driverName.startAnimation(animFadeOut);
+                                driverName.setText("Your driver has arrived!");
+                                Toast.makeText(RiderMapsActivity.this, "Driver has arrived!", Toast.LENGTH_LONG).show();
                                 mainButton.setAlpha(1f);
                                 mainButton.setClickable(true);
                             }
@@ -467,10 +469,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     public void showTransitDisplay(){
 
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
         markerProfilePic.startAnimation(animFadeOut);
         markerProfilePic.setVisibility(View.GONE);
+
         driverName.startAnimation(animFadeOut);
         driverName.setVisibility(View.GONE);
         mainButton.startAnimation(animFadeOut);
@@ -483,7 +484,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mainButton.setText("Complete Ride");
         findViewById(R.id.callBut).setVisibility(View.GONE);
         findViewById(R.id.chatBut).setVisibility(View.GONE);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
         findViewById(R.id.markerProfilePic).startAnimation(animFadeIn);
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
