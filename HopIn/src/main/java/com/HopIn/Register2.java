@@ -164,22 +164,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
 
                                     if (task.isSuccessful()) {
 
-                                       /* FirebaseUser muser = mAuth.getCurrentUser();
-
-                                        muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
-
-
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-
-                                                Log.d("tag", "onFailure: Email not send " + e.getMessage());
-                                            }
-                                        });*/
+                                       /* */
 
                                         Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
 
@@ -191,6 +176,24 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                 }
                             });
                             // send verification link to registered email
+
+                            FirebaseUser muser = mAuth.getCurrentUser();
+
+                            muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                    Log.d("tag", "onFailure: Email not send " + e.getMessage());
+                                }
+                            });
+
                             startActivity(new Intent(Register2.this, Verification.class));
                             db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
                             // startActivity(intent);
