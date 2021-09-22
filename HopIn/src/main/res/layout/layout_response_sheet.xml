@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    android:id="@+id/requestSheetContainer"
+    android:id="@+id/responseSheetContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/request_sheet_background"
-
     android:orientation="vertical">
 
 
@@ -27,9 +26,15 @@
         android:text="TextView" />
 
     <Button
-        android:id="@+id/requestButton"
+        android:id="@+id/acceptButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Request ride" />
+        android:text="Accept" />
+
+    <Button
+        android:id="@+id/declineButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Decline" />
 
 </LinearLayout>
