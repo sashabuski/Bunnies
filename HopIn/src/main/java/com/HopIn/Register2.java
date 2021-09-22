@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,19 +34,14 @@ import java.util.Map;
  * +other input requirements
  *
  */
-/**
- * This register user activity registers a new user with firebase authentication.
- * Will not accept duplicate emails, will only accept emails ending with "@autuni.ac.nz"
- * +other input requirements
- *
- */
-public class Register2 extends AppCompatActivity {
+public class Register2 extends AppCompatActivity{
 
     private EditText emailEditText, passwordEditText, repasswordEditText;
     private Button createButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    //private FirebaseFirestore db;
+    String currentuserID;
+    Button resendCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +52,52 @@ public class Register2 extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
+
+        createButton = (Button)findViewById(R.id.createButton);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
         repasswordEditText = (EditText) findViewById(R.id.repassword);
-
-        createButton = (Button)findViewById(R.id.createButton);
 
         createButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
-
                 registerUser();
-                //startActivity(new Intent(Register2.this, Verification.class));
-                startActivity(new Intent(Register2.this, Verification.class));
-                finish();
             }
         });
+
+        /*resendCode = findViewById(R.id.resendCode);
+
+        currentuserID = mAuth.getCurrentUser().getUid();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (!user.isEmailVerified()) {
+
+            //resendCode.setVisibility(View.VISIBLE);
+            resendCode.setVisibility(View.VISIBLE);
+
+            resendCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(v.getContext(), "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                        }
+                    });
+                }
+
+
+            });
+        }*/
+
     }
+
 
     /**
      * Method will only save to db if all input specifications have been passed.
@@ -88,6 +109,9 @@ public class Register2 extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String repassword = repasswordEditText.getText().toString().trim();
+
+        /*Intent intent;
+        intent = new Intent(this, enterName.class);*/
 
         if(!password.equals(repassword)){
             repasswordEditText.setError("Passwords do not match.");
@@ -122,37 +146,55 @@ public class Register2 extends AppCompatActivity {
 
         User user = new User(email, password);
 
+
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NotNull Task<AuthResult> task) {
+                .addOnCompleteListener((task) ->
+                {
 
-                        if(task.isSuccessful()){
+                    if(task.isSuccessful()){
 
-                            //verification link will be sent to registered email
+                        Intent intent = new Intent(this, enterName.class);
 
-                            FirebaseUser muser = mAuth.getCurrentUser();
-                            muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) 
-                                {
-                                    Toast.makeText(Register2.this, "Verification Email has been sent", Toast.LENGTH_SHORT).show();
+                        FirebaseDatabase.getInstance().getReference("Users")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NotNull Task<Void> task) {
 
+                                if(task.isSuccessful()){
+
+                                    db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
+                                    intent.putExtra("user", user);
+                                    Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
+
+                                }else{
+                                    Toast.makeText(Register2.this, "yoyo.", Toast.LENGTH_LONG).show();
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("tag", "onFailure: Email not sent" + e.getMessage());
-                                }
-                            });
+                            }
+                        });
+                        // send verification link to registered email
+                        FirebaseUser muser = mAuth.getCurrentUser();
+                        muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
 
-                            /*db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
-                            intent.putExtra("user", user);
-                            startActivity(intent);*/
-                        }
+                                startActivity(new Intent(Register2.this, Verification.class));
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                                Log.d("tag", "onFailure: Email not send " + e.getMessage());
+                            }
+                        });
+
+
+                       // startActivity(intent);
                     }
                 });
-        return;
+
     }
 
 }

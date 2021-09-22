@@ -35,84 +35,107 @@ import org.jetbrains.annotations.NotNull;
 
 import android.os.Bundle;
 
-public class Verification extends AppCompatActivity
-{
+public class Verification extends AppCompatActivity {
 
-    EditText emailEditText, passwordEditText, repasswordEditText;
     FirebaseFirestore db;
+    FirebaseAuth mAuth;
     String currentuserID;
     Button resendCode;
     TextView verifyMsg;
-    ProgressBar progressBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        FirebaseAuth mAuth;
-
-        Intent intent;
-        intent = new Intent(this, enterName.class);
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
+        Intent intent;
+        intent = new Intent(this, enterName.class);
+
         resendCode = findViewById(R.id.resendCode);
-        verifyMsg = findViewById(R.id.verifyMsg);
+        //verifyMsg = findViewById(R.id.verifyMsg);
 
+        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+/*if(!user.isEmailVerified()) {
+    startActivity(new Intent(getApplicationContext(), PreScreen.class));
 
 
-            resendCode.setOnClickListener(new View.OnClickListener() {
+
+    resendCode.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+
+            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
-                public void onClick(final View v) {
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(v.getContext(), "Verification Email has been sent", Toast.LENGTH_SHORT).show();
 
-                        user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(v.getContext(),
-                                        "Verification Email has been sent.",
-                                        Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-
-                                currentuserID = mAuth.getCurrentUser().getUid();
-
-                                return;
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                                return;
-                            }
-                        });
-
-                    FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NotNull Task<Void> task) {
-
-                            if(task.isSuccessful()){
-
-                                Toast.makeText(Verification.this, "Account created.", Toast.LENGTH_LONG).show();
-                                FirebaseUser user = mAuth.getCurrentUser();
-
-                            }else{
-                                Toast.makeText(Verification.this, "Account creation failed.", Toast.LENGTH_LONG).show();
-
-                            }
-                        }
-                    });
-                    db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
                 }
-
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                }
             });
+        }
+    });
+*/
+        resendCode.setVisibility(View.VISIBLE);
+
+        resendCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                /*
+                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(v.getContext(),
+                                "Verification Email has been sent.",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                    }
+                });
+*/
+                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(v.getContext(), "Verification Email has been sent", Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                    }
+                });
+
+                findViewById(R.id.setupbutton).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Verification.this, enterName.class));
+                    }
+                });
+
+                //intent.putExtra("user", user);
+               // startActivity(intent);
+
+                currentuserID = mAuth.getCurrentUser().getUid();
+            }
+        });
 
 
+}
 
     }
-}
+
+
