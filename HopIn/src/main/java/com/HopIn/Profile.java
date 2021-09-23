@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.PictureInPictureParams;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,12 +17,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class Profile extends AppCompatActivity {
     private static final int GALLERY_INTENT_CODE = 1023;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     Button changeProfileImage;
     ImageView profileImage;
     StorageReference storageReference;
@@ -34,8 +40,19 @@ public class Profile extends AppCompatActivity {
         profileImage = findViewById(R.id.profileImage);
         changeProfileImage = findViewById(R.id.changeProfile);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         storageReference = FirebaseStorage.getInstance().getReference();
+
+        StorageReference profileRef = storageReference.child("users/"+mAuth.getCurrentUser().getUid()+"/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri)
+            {
+                Picasso.get().load(uri).into(profileImage);
+            }
+        });
 
 changeProfileImage.setOnClickListener(new View.OnClickListener() {
     @Override
@@ -57,7 +74,7 @@ changeProfileImage.setOnClickListener(new View.OnClickListener() {
                 if(resultCode == Activity.RESULT_OK)
                 {
                 Uri imageUri = data.getData();
-                profileImage.setImageURI(imageUri);
+                //profileImage.setImageURI(imageUri);
 
                 uploadImageToFirebase(imageUri);
                 }
@@ -68,11 +85,17 @@ changeProfileImage.setOnClickListener(new View.OnClickListener() {
         private void uploadImageToFirebase(Uri imageUri)
         {
             //upload user's profile image to firebase storage
-            StorageReference fileRef = storageReference.child("profile.jpg");
+            final StorageReference fileRef = storageReference.child("profile.jpg");
             fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(Profile.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.get().load(uri).into(profileImage);
+                        }
+                    });
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
