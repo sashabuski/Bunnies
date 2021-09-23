@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginPrototype">
-
+        <activity
+            android:name=".Profile"
+            android:exported="true" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -66,13 +68,11 @@
         <activity
             android:name=".SignInActivity"
             android:label="@string/title_activity_sign_in" />
-        <activity
-        android:name=".Verification"/>
+        <activity android:name=".Verification" />
         <activity android:name=".Register2" />
         <activity
             android:name=".RiderMapsActivity"
             android:label="@string/title_activity_rider_maps" />
-
     </application>
 
 </manifest>

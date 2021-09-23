@@ -62,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Intent intent;
-                    intent = new Intent(SignInActivity.this, PreScreen.class);
+                    intent = new Intent(SignInActivity.this, Profile.class);
                    // intent.putExtra("email", "logged in as: "+email);
                     startActivity(intent);
                 }else{
