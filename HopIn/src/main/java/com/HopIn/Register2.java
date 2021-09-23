@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  * +other input requirements
  *
  */
-public class Register2 extends AppCompatActivity{
+public class Register2 extends AppCompatActivity implements Serializable {
 
     private EditText emailEditText, passwordEditText, repasswordEditText;
     private Button createButton;
@@ -42,7 +43,7 @@ public class Register2 extends AppCompatActivity{
     private FirebaseFirestore db;
     String currentuserID;
     Button resendCode;
-
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class Register2 extends AppCompatActivity{
             public void onClick(View view) {
 
                 registerUser();
+
             }
         });
 
@@ -144,56 +146,61 @@ public class Register2 extends AppCompatActivity{
             return;
         }
 
-        User user = new User(email, password);
+        user = new User(email, password);
 
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener((task) ->
-                {
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NotNull Task<AuthResult> task) {
 
-                    if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
-                        Intent intent = new Intent(this, enterName.class);
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NotNull Task<Void> task) {
 
-                        FirebaseDatabase.getInstance().getReference("Users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NotNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
 
-                                if(task.isSuccessful()){
+                                       /* */
 
-                                    db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
-                                    intent.putExtra("user", user);
-                                    Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
 
-                                }else{
-                                    Toast.makeText(Register2.this, "yoyo.", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(Register2.this, "yoyo.", Toast.LENGTH_LONG).show();
+                                    }
+
+
                                 }
-                            }
-                        });
-                        // send verification link to registered email
-                        FirebaseUser muser = mAuth.getCurrentUser();
-                        muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
+                            });
+                            // send verification link to registered email
 
-                                startActivity(new Intent(Register2.this, Verification.class));
+                            FirebaseUser muser = mAuth.getCurrentUser();
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                                Log.d("tag", "onFailure: Email not send " + e.getMessage());
-                            }
-                        });
+                            muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
 
 
-                       // startActivity(intent);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                    Log.d("tag", "onFailure: Email not send " + e.getMessage());
+                                }
+                            });
+
+                            startActivity(new Intent(Register2.this, Verification.class));
+                            db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
+                            // startActivity(intent);
+                        }
                     }
                 });
+
 
     }
 

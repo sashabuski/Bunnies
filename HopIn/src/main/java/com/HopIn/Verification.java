@@ -35,13 +35,16 @@ import org.jetbrains.annotations.NotNull;
 
 import android.os.Bundle;
 
-public class Verification extends AppCompatActivity {
+import java.io.Serializable;
+
+public class Verification extends AppCompatActivity implements Serializable {
 
     FirebaseFirestore db;
     FirebaseAuth mAuth;
     String currentuserID;
     Button resendCode;
     TextView verifyMsg;
+    Button setUpBut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +54,23 @@ public class Verification extends AppCompatActivity {
 
         Intent intent;
         intent = new Intent(this, enterName.class);
-
+        Intent i = getIntent();
         resendCode = findViewById(R.id.resendCode);
         //verifyMsg = findViewById(R.id.verifyMsg);
+
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        setUpBut = findViewById(R.id.setupbutton);
+        setUpBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Verification.this, enterName.class));
+            }
+        });
 /*if(!user.isEmailVerified()) {
     startActivity(new Intent(getApplicationContext(), PreScreen.class));
 
@@ -119,12 +130,7 @@ public class Verification extends AppCompatActivity {
                     }
                 });
 
-                findViewById(R.id.setupbutton).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(Verification.this, enterName.class));
-                    }
-                });
+
 
                 //intent.putExtra("user", user);
                // startActivity(intent);
