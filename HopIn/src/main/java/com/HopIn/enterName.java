@@ -8,21 +8,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+
+import java.io.Serializable;
 
 /**
  * This Activity requests the users name to be entered by the user when registering
  * their account, and saves it to the User db object.
  */
-public class enterName extends AppCompatActivity {
+public class enterName extends AppCompatActivity implements Serializable {
 
     private EditText firstNameInput, lastNameInput;
     private Button nextButton;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private User user;
+    private Intent nextIntent;
     @Override
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +37,12 @@ public class enterName extends AppCompatActivity {
         nextButton = (Button)findViewById(R.id.nextButton);
         firstNameInput = (EditText) findViewById(R.id.firstName);
         lastNameInput = (EditText) findViewById(R.id.lastName);
+
+        Intent i = getIntent();
+
+        nextIntent = new Intent(this, enterCar.class);
+
+        user = (User)(i.getSerializableExtra("user"));
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,10 +61,7 @@ public class enterName extends AppCompatActivity {
 
     public void addNameToDB(){
 
-        Intent i = getIntent();
-        Intent nextIntent = new Intent(this, enterCar.class);
 
-        User user = (User)(i.getSerializableExtra("user"));
 
         String firstName = firstNameInput.getText().toString().trim();
         String lastName = lastNameInput.getText().toString().trim();
@@ -68,11 +77,18 @@ public class enterName extends AppCompatActivity {
             return;
         }
 
-        user.setfName(firstName);
-        user.setlName(lastName);
 
         db.collection("Users").document(mAuth.getCurrentUser().getUid())
-                .set(user, SetOptions.merge());
+                .update(
+                        "fName", firstName,
+                        "lName", lastName
+                ).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                System.out.println("you did it");
+            }
+        });
+
 
         nextIntent.putExtra("user", user);
         startActivity(nextIntent);

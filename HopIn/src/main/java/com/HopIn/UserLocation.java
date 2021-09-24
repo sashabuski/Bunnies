@@ -17,6 +17,17 @@ public class UserLocation {
     private User user;
     private GeoPoint geoPoint;
     private @ServerTimestamp Date timestamp;
+    private float bearing;
+
+    public void setBearing(float bearing) {
+        this.bearing = bearing;
+    }
+
+    public float getBearing() {
+        return bearing;
+    }
+
+
 
     public User getUser() {
         return user;

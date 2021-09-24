@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -70,8 +71,6 @@ public class enterCar extends AppCompatActivity {
      */
     public void addCarToDB(){
 
-            Intent i = getIntent();
-            User user = (User)(i.getSerializableExtra("user"));
 
             String carModel = carModelInput.getText().toString().trim();
             String carNumber = carNumberInput.getText().toString().trim();
@@ -87,13 +86,20 @@ public class enterCar extends AppCompatActivity {
                 return;
             }
 
-            user.setCarModel(carModel);
-            user.setCarNumber(carNumber);
 
-            db.collection("Users").document(mAuth.getCurrentUser().getUid())
-                    .set(user, SetOptions.merge());
 
-            nextIntent.putExtra("user", user);
+        db.collection("Users").document(mAuth.getCurrentUser().getUid())
+                .update(
+                        "carModel", carModel,
+                        "carNumber", carNumber
+                ).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                System.out.println("you did it");
+            }
+        });
+
+
             startActivity(nextIntent);
         }
     }
