@@ -43,7 +43,6 @@ public class Verification extends AppCompatActivity implements Serializable {
     FirebaseAuth mAuth;
     String currentuserID;
     Button resendCode;
-    TextView verifyMsg;
     Button setUpBut;
 
     @Override
@@ -55,9 +54,7 @@ public class Verification extends AppCompatActivity implements Serializable {
         Intent intent;
         intent = new Intent(this, enterName.class);
         Intent i = getIntent();
-        resendCode = findViewById(R.id.resendCode);
-        //verifyMsg = findViewById(R.id.verifyMsg);
-
+        //resendCode = findViewById(R.id.resendCode);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -71,52 +68,15 @@ public class Verification extends AppCompatActivity implements Serializable {
                 startActivity(new Intent(Verification.this, enterName.class));
             }
         });
-/*if(!user.isEmailVerified()) {
-    startActivity(new Intent(getApplicationContext(), PreScreen.class));
 
+        //will fix in sprint 2
 
-
-    resendCode.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-
-            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(v.getContext(), "Verification Email has been sent", Toast.LENGTH_SHORT).show();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                }
-            });
-        }
-    });
-*/
-        resendCode.setVisibility(View.VISIBLE);
+       /* resendCode.setVisibility(View.VISIBLE);
 
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
-                /*
-                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(v.getContext(),
-                                "Verification Email has been sent.",
-                                Toast.LENGTH_SHORT).show();
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                    }
-                });
-*/
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -129,18 +89,16 @@ public class Verification extends AppCompatActivity implements Serializable {
                         Log.d("tag", "onFailure: Email not sent " + e.getMessage());
                     }
                 });
-
-
-
+*/
                 //intent.putExtra("user", user);
                // startActivity(intent);
 
                 currentuserID = mAuth.getCurrentUser().getUid();
             }
-        });
+        //});
 
 
-}
+
 
     }
 

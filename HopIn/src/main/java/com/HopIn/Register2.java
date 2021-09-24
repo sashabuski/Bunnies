@@ -68,36 +68,6 @@ public class Register2 extends AppCompatActivity implements Serializable {
             }
         });
 
-        /*resendCode = findViewById(R.id.resendCode);
-
-        currentuserID = mAuth.getCurrentUser().getUid();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (!user.isEmailVerified()) {
-
-            //resendCode.setVisibility(View.VISIBLE);
-            resendCode.setVisibility(View.VISIBLE);
-
-            resendCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(v.getContext(), "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                        }
-                    });
-                }
-
-
-            });
-        }*/
-
     }
 
 
@@ -162,29 +132,23 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                 @Override
                                 public void onComplete(@NotNull Task<Void> task) {
 
-                                    if (task.isSuccessful()) {
-
-                                       /* */
-
+                                    if (task.isSuccessful()){
                                         Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
 
                                     } else {
                                         Toast.makeText(Register2.this, "yoyo.", Toast.LENGTH_LONG).show();
                                     }
 
-
                                 }
                             });
-                            // send verification link to registered email
 
+                            // sends verification link to registered email
                             FirebaseUser muser = mAuth.getCurrentUser();
 
                             muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
-
-
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

@@ -7,6 +7,18 @@
     tools:context=".enterCar"
     android:background="@color/light_pink">
 
+    <TextView
+        android:id="@+id/entercartext"
+        android:layout_width="107dp"
+        android:layout_height="39dp"
+        android:text="Enter Your Car"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.255" />
+
     <ImageView
         android:id="@+id/bunnylogo"
         android:layout_width="161dp"
@@ -56,13 +68,14 @@
         android:id="@+id/nextButton"
         android:layout_width="293dp"
         android:layout_height="50dp"
-        android:text="Next"
         android:background="@drawable/rounded_button"
+        android:text="Next"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.594" />
+        app:layout_constraintVertical_bias="0.675" />
 
     <Button
         android:id="@+id/skipButton"
@@ -70,13 +83,10 @@
         android:layout_height="50dp"
         android:background="@drawable/rounded_button"
         android:text="Skip"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/dark_pink"
-        app:iconTint="#2196F3"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.68" />
+        app:layout_constraintTop_toBottomOf="@+id/nextButton"
+        app:layout_constraintVertical_bias="0.087" />
 </androidx.constraintlayout.widget.ConstraintLayout>
