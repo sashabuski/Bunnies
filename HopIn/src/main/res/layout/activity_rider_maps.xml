@@ -112,7 +112,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+
                 app:layout_constraintTop_toBottomOf="@+id/verificationCode"
+
                 app:shapeAppearanceOverlay="@style/Circular"
                 app:strokeColor="#5881F7"
                 app:strokeWidth="5dp" />
@@ -281,8 +283,10 @@
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/transit_animation" />
+
 				
 			<com.airbnb.lottie.LottieAnimationView
+
                 android:id="@+id/carDriving"
                 android:layout_width="348dp"
                 android:layout_height="243dp"
@@ -298,7 +302,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
+
                 app:lottie_rawRes="@raw/driving_car" />			
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
