@@ -31,7 +31,7 @@ public class Profile extends AppCompatActivity {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     User currentUser;
-
+    
     private Button updateButton;
     private TextView txtWelcome;
     private TextView txtEmail;

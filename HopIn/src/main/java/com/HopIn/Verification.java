@@ -43,7 +43,6 @@ public class Verification extends AppCompatActivity implements Serializable {
     FirebaseAuth mAuth;
     String currentuserID;
     Button resendCode;
-    TextView verifyMsg;
     Button setUpBut;
 
     @Override
@@ -95,13 +94,14 @@ public class Verification extends AppCompatActivity implements Serializable {
         }
     });
 */
+        /*
         resendCode.setVisibility(View.VISIBLE);
 
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
 
-                /*
+
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -116,7 +116,7 @@ public class Verification extends AppCompatActivity implements Serializable {
                         Log.d("tag", "onFailure: Email not sent " + e.getMessage());
                     }
                 });
-*/
+
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -129,7 +129,7 @@ public class Verification extends AppCompatActivity implements Serializable {
                         Log.d("tag", "onFailure: Email not sent " + e.getMessage());
                     }
                 });
-
+*/
 
 
                 //intent.putExtra("user", user);
@@ -137,11 +137,11 @@ public class Verification extends AppCompatActivity implements Serializable {
 
                 currentuserID = mAuth.getCurrentUser().getUid();
             }
-        });
+       // });
 
 
 }
 
-    }
+
 
 

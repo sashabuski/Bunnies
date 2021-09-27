@@ -41,8 +41,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
     private Button createButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    String currentuserID;
-    Button resendCode;
+
     User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,6 @@ public class Register2 extends AppCompatActivity implements Serializable {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
-
 
         createButton = (Button)findViewById(R.id.createButton);
         emailEditText = (EditText) findViewById(R.id.username);
@@ -68,38 +65,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
             }
         });
 
-        /*resendCode = findViewById(R.id.resendCode);
-
-        currentuserID = mAuth.getCurrentUser().getUid();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (!user.isEmailVerified()) {
-
-            //resendCode.setVisibility(View.VISIBLE);
-            resendCode.setVisibility(View.VISIBLE);
-
-            resendCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(v.getContext(), "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                        }
-                    });
-                }
-
-
-            });
-        }*/
-
     }
-
 
     /**
      * Method will only save to db if all input specifications have been passed.
@@ -164,12 +130,10 @@ public class Register2 extends AppCompatActivity implements Serializable {
 
                                     if (task.isSuccessful()) {
 
-                                       /* */
-
-                                        Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Register2.this, "Account created", Toast.LENGTH_LONG).show();
 
                                     } else {
-                                        Toast.makeText(Register2.this, "yoyo.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Register2.this, "", Toast.LENGTH_LONG).show();
                                     }
 
 
@@ -183,7 +147,6 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
-
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
