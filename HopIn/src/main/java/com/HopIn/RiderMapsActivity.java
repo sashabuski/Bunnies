@@ -119,7 +119,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+        //icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
 

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HopIn.iml" filepath="$PROJECT_DIR$/.idea/modules/HopIn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/333890472/Bunnies.HopIn.iml" filepath="$PROJECT_DIR$/.idea/modules/333890472/Bunnies.HopIn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HopIn.HopIn.iml" filepath="$PROJECT_DIR$/.idea/modules/HopIn.HopIn.iml" />
     </modules>
   </component>
 </project>
