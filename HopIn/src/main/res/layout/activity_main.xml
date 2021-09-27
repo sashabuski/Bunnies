@@ -22,36 +22,36 @@
 
     <ImageView
         android:id="@+id/fab_twitter"
-        android:layout_width="91dp"
-        android:layout_height="60dp"
+        android:layout_width="58dp"
+        android:layout_height="43dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/twitterlogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.168"
+        app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.704" />
+        app:layout_constraintVertical_bias="0.703" />
 
     <ImageView
         android:id="@+id/fab_facebook"
-        android:layout_width="84dp"
-        android:layout_height="52dp"
+        android:layout_width="59dp"
+        android:layout_height="43dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/fblogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.819"
+        app:layout_constraintHorizontal_bias="0.678"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.703" />
 
     <ImageView
         android:id="@+id/fab_instagram"
-        android:layout_width="60dp"
-        android:layout_height="52dp"
+        android:layout_width="46dp"
+        android:layout_height="42dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:background="@color/light_pink"
@@ -89,8 +89,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/createAccountButton"
