@@ -7,6 +7,7 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginPrototype">
-        <activity
-            android:name=".activity_passager_Details"
-            android:exported="true" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -29,36 +28,34 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity
-            android:name=".RiderMapsActivity"
-            android:label="@string/title_activity_rider_maps" />
-
-        <service
+        <!--
+<service
             android:name=".ExitService"
             android:enabled="true"
             android:exported="false"
             android:stopWithTask="false" />
-
+        -->
         <activity
             android:name=".DriverMapsActivity"
             android:label="@string/title_activity_driver_maps" />
-        <activity
+        <!--
+<activity
             android:name=".DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
+        -->
         <activity android:name=".PreScreen" />
         <activity android:name=".enterCar" />
         <activity android:name=".enterName" />
-        <activity
+        <!--
+<activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity
+        -->
+        <!--
+<activity
             android:name=".DMapsActivity"
             android:label="@string/title_activity_dmaps" />
-        <activity android:name=".Register2" />
-        <activity
-            android:name=".SignInActivity"
-            android:label="@string/title_activity_sign_in" />
+        -->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,6 +63,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SignInActivity"
+            android:label="@string/title_activity_sign_in" />
+        <activity
+        android:name=".Verification"/>
+        <activity android:name=".Register2" />
+        <activity
+            android:name=".RiderMapsActivity"
+            android:label="@string/title_activity_rider_maps" />
+
+        <activity
+            android:name=".Profile"
+            android:label="@string/title_profile" />
+
+
     </application>
 
 </manifest>

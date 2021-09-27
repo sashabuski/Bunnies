@@ -87,6 +87,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private Animation animFadeIn, animFadeOut;
     private TextView transitText, welcomeText, name;
     private LottieAnimationView carDriving, loading;
+    private TextView carModelText;
+    private TextView carPlateText;
+    private TextView codeText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +142,15 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         loading.setVisibility(View.GONE);
         markerProfilePic.setVisibility(View.GONE);
 
+        
+        carModelText = findViewById(R.id.carModel);
+        carPlateText = findViewById(R.id.carNumberPlate);
+        codeText = findViewById(R.id.verificationCode);
+        carModelText.setVisibility(View.GONE);
+        carPlateText.setVisibility(View.GONE);
+        codeText.setVisibility(View.GONE);
+
+
         findViewById(R.id.waitingText).setVisibility(View.GONE);
         findViewById(R.id.callBut).setVisibility(View.GONE);
         findViewById(R.id.chatBut).setVisibility(View.GONE);
@@ -154,7 +167,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         getDriversWithRealtimeUpdates(mMap, getCurrentFocus());
 
-     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -255,6 +270,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                     hideWelcomeShowDriverDisplay(item);
 
                                     driverName.setText(item.getUser().getUser().fName + " " + item.getUser().getUser().lName);
+
+                                    carPlateText.setText(item.getUser().getUser().carNumber);
+
                                     mainButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
@@ -360,19 +378,24 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                                 mainButton.setOnClickListener(new View.OnClickListener() {
 
-                                     @Override
-                                     public void onClick(View view) {
 
-                                     backToHomeDisplay();
+                                    @Override
+                                    public void onClick(View view) {
 
-                                     }
-                                 });
+                                        backToHomeDisplay();
+
+                                    }
+                                });
+
                             }
                         }
                     }
                 }
             }
-       });
+
+        });
+
+
     }
 
     public boolean isTimestampLive(Date date) {
@@ -396,6 +419,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
                 if (error != null) {
+
 
                     return;
                 }
@@ -429,6 +453,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         welcomeText.setVisibility(View.VISIBLE);
         carDriving.startAnimation(animFadeIn);
         carDriving.setVisibility(View.VISIBLE);
+        carPlateText.setVisibility(View.GONE);
     }
 
     public void showDeclinedDisplay(Ride newRide){
@@ -444,9 +469,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mainButton.setText("Select New Ride");
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
-
+        carPlateText.setVisibility(View.VISIBLE);
 
     }
+
 
 
     public void hideWelcomeShowDriverDisplay(CarClusterMarker item) { welcomeText.startAnimation(animFadeOut);
@@ -463,7 +489,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         markerProfilePic.setVisibility(View.VISIBLE);
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
-}
+
+    }
 
     public void showTransitDisplay(){
 
@@ -471,6 +498,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
         markerProfilePic.startAnimation(animFadeOut);
         markerProfilePic.setVisibility(View.GONE);
+
         driverName.startAnimation(animFadeOut);
         driverName.setVisibility(View.GONE);
         mainButton.startAnimation(animFadeOut);
@@ -487,6 +515,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         findViewById(R.id.markerProfilePic).startAnimation(animFadeIn);
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
+        carPlateText.setVisibility(View.GONE);
+
     }
 
     public void showConfirmPickupDisplay(Ride newRide){
@@ -508,6 +538,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         findViewById(R.id.chatBut).setVisibility(View.VISIBLE);
         mainButton.setClickable(false);
         mainButton.setAlpha(.5f);
+        carPlateText.setText(newRide.getDriver().getUser().carNumber);
+        carPlateText.setVisibility(View.VISIBLE);
+
     }
 
     public void showWaitingForResponseDisplay(CarClusterMarker item){
@@ -529,6 +562,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         waitingText.setText("Ride request sent to " + item.getUser().getUser().fName + ". Waiting for confirmation..");
         waitingText.startAnimation(animFadeIn);
         waitingText.setVisibility(View.VISIBLE);
+
+        carPlateText.setVisibility(View.GONE);
+
     }
 
     @Override
