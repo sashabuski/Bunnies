@@ -219,5 +219,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <Button
+        android:id="@+id/passager_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Passager Info" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
