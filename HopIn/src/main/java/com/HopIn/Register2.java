@@ -78,9 +78,6 @@ public class Register2 extends AppCompatActivity implements Serializable {
         String password = passwordEditText.getText().toString().trim();
         String repassword = repasswordEditText.getText().toString().trim();
 
-        /*Intent intent;
-        intent = new Intent(this, enterName.class);*/
-
         if(!password.equals(repassword)){
             repasswordEditText.setError("Passwords do not match.");
             repasswordEditText.requestFocus();
@@ -133,7 +130,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                         Toast.makeText(Register2.this, "Account created", Toast.LENGTH_LONG).show();
 
                                     } else {
-                                        Toast.makeText(Register2.this, "", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Register2.this, " Please verify your email", Toast.LENGTH_LONG).show();
                                     }
 
 

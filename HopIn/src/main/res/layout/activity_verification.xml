@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.087" />
 
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/textmsg"
         android:layout_width="wrap_content"
         android:layout_height="47dp"
@@ -31,9 +31,9 @@
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0" />-->
 
-    <Button
+   <!-- <Button
         android:id="@+id/resendCode"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
@@ -47,21 +47,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.452" />
-
+-->
     <Button
         android:id="@+id/setupbutton"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:layout_marginBottom="384dp"
         android:background="@drawable/rounded_button"
         android:text="Set Up Account"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         app:backgroundTint="@color/dark_pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resendCode"
-        app:layout_constraintVertical_bias="0.374" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
