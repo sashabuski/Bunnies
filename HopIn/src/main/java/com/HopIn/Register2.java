@@ -136,7 +136,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                         Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
 
                                     } else {
-                                        Toast.makeText(Register2.this, "yoyo.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Register2.this, "Please verify email", Toast.LENGTH_LONG).show();
                                     }
 
                                 }

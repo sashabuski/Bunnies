@@ -52,7 +52,7 @@ public class Verification extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_verification);
 
         Intent intent;
-        intent = new Intent(this, enterName.class);
+        intent = new Intent(this, SignInActivity.class);
         Intent i = getIntent();
         //resendCode = findViewById(R.id.resendCode);
 
@@ -65,7 +65,7 @@ public class Verification extends AppCompatActivity implements Serializable {
         setUpBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Verification.this, enterName.class));
+                startActivity(new Intent(Verification.this, SignInActivity.class));
             }
         });
 
