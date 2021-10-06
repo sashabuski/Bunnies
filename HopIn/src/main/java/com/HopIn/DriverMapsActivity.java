@@ -82,7 +82,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private ConstraintLayout cl;
     private FusedLocationProviderClient fusedLocation;
     private Button declineBut;
-    private   Button acceptBut;
+    private Button acceptBut;
     private View bottomSheetView;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation animFadeIn;

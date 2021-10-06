@@ -15,6 +15,17 @@
         app:layout_scrollFlags="scroll|enterAlways"
         tools:context=".DriverMapsActivity"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/menuButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_gravity="top|start"
+        android:layout_margin="8dp"
+        app:tint="@android:color/white"
+        android:src="@drawable/whitehamburger"
+        app:backgroundTint="#5181F1"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/driverBottomSheet"
         android:layout_width="match_parent"

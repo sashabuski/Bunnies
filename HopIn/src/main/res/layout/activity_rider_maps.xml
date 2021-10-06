@@ -15,6 +15,17 @@
         app:layout_scrollFlags="scroll|enterAlways"
         tools:context=".RiderMapsActivity"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/menuButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_gravity="top|start"
+        android:layout_margin="8dp"
+        android:src="@drawable/whitehamburger"
+        app:tint="@android:color/white"
+        app:backgroundTint="#5181F1"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
