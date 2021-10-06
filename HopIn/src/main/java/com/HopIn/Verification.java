@@ -66,6 +66,7 @@ public class Verification extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Verification.this, SignInActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -98,7 +99,11 @@ public class Verification extends AppCompatActivity implements Serializable {
         //});
 
 
-
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
     }
 

@@ -65,11 +65,17 @@ public class SignInActivity extends AppCompatActivity {
                     intent = new Intent(SignInActivity.this, Profile.class);
                    // intent.putExtra("email", "logged in as: "+email);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }else{
                     Toast.makeText(SignInActivity.this, "Failed to login. Please check your credentials", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+    }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

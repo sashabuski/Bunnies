@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -44,14 +46,15 @@ public class Register2 extends AppCompatActivity implements Serializable {
     String currentuserID;
     Button resendCode;
     User user;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    //@Override
+    protected void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register2);
 
+
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
 
 
         createButton = (Button)findViewById(R.id.createButton);
@@ -159,6 +162,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
                             });
 
                             startActivity(new Intent(Register2.this, Verification.class));
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
                             // startActivity(intent);
                         }
@@ -168,4 +172,9 @@ public class Register2 extends AppCompatActivity implements Serializable {
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

@@ -72,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public void openCreateAccount(){
 
         Intent intent = new Intent(this, Register2.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }
