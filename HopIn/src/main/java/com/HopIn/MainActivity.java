@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     public static final String filename = "login";
     public static final String Username = "username";
-    public static final String password = "password";
     TextView textMessage;
 
     @Override
@@ -49,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
 
-        sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(Username))
-        {
+        /*sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(Username)){
             textMessage.setText("Hello " + sharedPreferences.getString(Username, ""));
-        }
+        }*/
 
 
         mAuth = FirebaseAuth.getInstance();

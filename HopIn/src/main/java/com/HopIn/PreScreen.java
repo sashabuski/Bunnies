@@ -2,7 +2,9 @@ package com.HopIn;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +38,10 @@ public class PreScreen extends AppCompatActivity {
     Button nextButton;
     Intent driverIntent;
     Intent riderIntent;
+    public static final String filename = "login";
+    public static final String Username = "username";
+    TextView textMessage;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,12 @@ public class PreScreen extends AppCompatActivity {
         d = (TextView)findViewById(R.id.d);
         e = (TextView)findViewById(R.id.e);
         f = (TextView)findViewById(R.id.f);
+
+        sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(Username)){
+            textMessage.setText("Hello " + sharedPreferences.getString(Username, ""));
+        }
+
 
         driverIntent = new Intent(this, DriverMapsActivity.class);
         riderIntent = new Intent(this, RiderMapsActivity.class);
@@ -70,7 +82,7 @@ public class PreScreen extends AppCompatActivity {
 
             }});
 
-        DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getUid());
+        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
