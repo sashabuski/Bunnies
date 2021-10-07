@@ -11,12 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,12 +30,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
     private Button SignInButton;
     private Button createAccountButton;
     FirebaseAuth mAuth;
     FirebaseUser muser;
     FirebaseFirestore db;
-
+    public static final String filename = "login";
+    public static final String Username = "username";
+    public static final String password = "password";
+    TextView textMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
+
+        sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(Username))
+        {
+            textMessage.setText("Hello " + sharedPreferences.getString(Username, ""));
+        }
 
 
         mAuth = FirebaseAuth.getInstance();

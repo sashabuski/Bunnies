@@ -1,6 +1,8 @@
 package com.HopIn;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +31,10 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button signInButton;
     private EditText emailEditText, passwordEditText;
+    SharedPreferences sharedPreferences;
+    public static final String filename = "login";
+    public static final String Username = "username";
+    //public static final String Password = "password";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,13 +48,22 @@ public class SignInActivity extends AppCompatActivity {
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
 
-        signInButton.setOnClickListener(new View.OnClickListener(){
+        signInButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
 
                 signIn();
             }
         });
+
+        sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(Username))
+        {
+            Intent intent = new Intent(SignInActivity.this, PreScreen.class);
+            startActivity(intent);
+        }
+
 
     }
 
