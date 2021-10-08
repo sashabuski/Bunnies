@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -42,6 +43,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -83,11 +86,11 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private FusedLocationProviderClient fusedLocation;
     private Button declineBut;
     private Button acceptBut;
-    private View bottomSheetView;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private View bottomSheetView, dashboardSheetView;
+    private BottomSheetBehavior bottomSheetBehavior,dashboardSheetBehavior;
     private Animation animFadeIn;
     private Animation animFadeOut;
-    private TextView requestText, welcomeText, welcomeTip;
+    private TextView requestText, welcomeText, welcomeTip, dashboardUserName;
     private LottieAnimationView carDriving;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +107,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         bottomSheetView = (View)findViewById(R.id.driverBottomSheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
+
+        dashboardSheetView = (View)findViewById(R.id.dashboard);
+        dashboardSheetBehavior = BottomSheetBehavior.from(dashboardSheetView);
 
         icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
 
@@ -126,6 +132,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+
+         dashboardUserName =  findViewById(R.id.dashboardUserName);
+         dashboardUserName.setText(currentUser.fName+" "+currentUser.lName);
+
          welcomeTip = findViewById(R.id.welcomeTip);
          welcomeText = findViewById(R.id.welcomeText);
          declineBut = findViewById(R.id.declineButton);
@@ -139,6 +149,26 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
          findViewById(R.id.arrivedButton).setVisibility(View.GONE);
          findViewById(R.id.arriveTip).setVisibility(View.GONE);
          findViewById(R.id.requestPic).setVisibility(View.GONE);
+         dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+         FloatingActionButton menuButton = findViewById(R.id.menuButton);
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                {
+                    bottomSheetBehavior.setPeekHeight(80);
+                    dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }else {
+                    bottomSheetBehavior.setPeekHeight(0);
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                    dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    dashboardSheetBehavior.setDraggable(false);
+
+                }
+            }
+        });
 
     }
 
@@ -154,6 +184,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         listenForRequests(mMap );
         welcomeText.setText("Good Morning "+currentUser.fName+".");
+
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -385,7 +416,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onBackPressed(){//open prompt are you sure?
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        } else {
+        }
+        else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setPeekHeight(80);
+            dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        else {
             locationManager.removeUpdates(locationListener);
             db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
             Intent intent = new Intent(this, PreScreen.class);

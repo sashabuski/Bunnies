@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -79,13 +80,13 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private UserLocation currentUserLocation;
     private BitmapDescriptor icon;
     private ArrayList<CarClusterMarker> mClusterMarkers = new ArrayList<>();
-    private View bottomSheetView;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private View bottomSheetView, dashboardSheetView;
+    private BottomSheetBehavior bottomSheetBehavior,dashboardSheetBehavior;
     private Button mainButton;
     private TextView driverName;
     private ShapeableImageView driverPic, markerProfilePic;
     private Animation animFadeIn, animFadeOut;
-    private TextView transitText, welcomeText, name;
+    private TextView transitText, welcomeText, name, dashboardUserName;
     private LottieAnimationView carDriving, loading;
 
     @Override
@@ -123,6 +124,12 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+        dashboardSheetView = (View)findViewById(R.id.dashboard);
+        dashboardSheetBehavior = BottomSheetBehavior.from(dashboardSheetView);
+        dashboardUserName =  findViewById(R.id.dashboardUserName);
+        dashboardUserName.setText(currentUser.fName+" "+currentUser.lName);
+
+
         mainButton = findViewById(R.id.mainButton);
         driverName = findViewById(R.id.driverName);
         driverPic = findViewById(R.id.profilePic);
@@ -142,6 +149,27 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         findViewById(R.id.callBut).setVisibility(View.GONE);
         findViewById(R.id.chatBut).setVisibility(View.GONE);
         findViewById(R.id.transitAnimation).setVisibility(View.GONE);
+        dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        FloatingActionButton menuButton = findViewById(R.id.menuButton);
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                {
+                    bottomSheetBehavior.setPeekHeight(80);
+                    dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }else {
+                    bottomSheetBehavior.setPeekHeight(0);
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                    dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    dashboardSheetBehavior.setDraggable(false);
+
+                }
+            }
+        });
+
 
     }
 
@@ -536,6 +564,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     public void onBackPressed() {//open prompt are you sure?
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setPeekHeight(80);
+            dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
             locationManager.removeUpdates(locationListener);
             db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
