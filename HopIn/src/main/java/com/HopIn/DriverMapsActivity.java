@@ -257,9 +257,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
                                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                             requested = true;
-                                            LatLng l = new LatLng(newRide.getRider().getGeoPoint().getLatitude(),newRide.getRider().getGeoPoint().getLongitude());
-                                            googleMap.addMarker(new MarkerOptions().position(l).title(newRide.getRider().getUser().fName));
-                                            CameraUpdate center = CameraUpdateFactory.newLatLng(l);
+                                            PickupPt pickupPt = newRide.getPickupPoint();
+                                            LatLng pleasework = new LatLng(pickupPt.getLatitude(), pickupPt.getLongitude());
+                                            googleMap.addMarker(new MarkerOptions().position(pleasework).title(newRide.getRider().getUser().fName));
+                                            CameraUpdate center = CameraUpdateFactory.newLatLng(pleasework);
                                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                                             googleMap.moveCamera(center);
                                             googleMap.animateCamera(zoom);

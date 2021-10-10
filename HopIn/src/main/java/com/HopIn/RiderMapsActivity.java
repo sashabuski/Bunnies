@@ -33,10 +33,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.HopIn.databinding.ActivityRiderMapsBinding;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -86,9 +88,11 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private TextView driverName;
     private ShapeableImageView driverPic, markerProfilePic;
     private Animation animFadeIn, animFadeOut;
-    private TextView transitText, welcomeText, name, dashboardUserName;
+    private TextView transitText, welcomeText, name, dashboardUserName, pointSelectedText;
     private LottieAnimationView carDriving, loading;
-
+    private LatLng pickupPoint;
+    private ExtendedFloatingActionButton confirmPickupPointButton;
+    private Boolean pointSelected = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +134,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         dashboardUserName.setText(currentUser.fName+" "+currentUser.lName);
 
 
+        pointSelectedText = findViewById(R.id.pointSelectedText);
+        confirmPickupPointButton = findViewById(R.id.confirmPickupPointButton);
         mainButton = findViewById(R.id.mainButton);
         driverName = findViewById(R.id.driverName);
         driverPic = findViewById(R.id.profilePic);
@@ -139,6 +145,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         carDriving = findViewById(R.id.carDriving);
         loading =  findViewById(R.id.loading);
         markerProfilePic = findViewById(R.id.markerProfilePic);
+        confirmPickupPointButton.setVisibility(View.GONE);
         mainButton.setVisibility(View.GONE);
         driverName.setVisibility(View.GONE);
         driverPic.setVisibility(View.GONE);
@@ -178,9 +185,55 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
         mMap = googleMap;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
-        welcomeText.setText("Welcome "+currentUser.fName+", please select your ride.");
+        welcomeText.setText("Welcome "+currentUser.fName);
+        mainButton.setText("Select pickup point");
+        mainButton.setVisibility(View.VISIBLE);
+
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         getDriversWithRealtimeUpdates(mMap, getCurrentFocus());
+
+        mainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetBehavior.setPeekHeight(0);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                confirmPickupPointButton.setAlpha(.7f);
+                confirmPickupPointButton.setClickable(false);
+                confirmPickupPointButton.startAnimation(animFadeIn);
+                confirmPickupPointButton.setVisibility(View.VISIBLE);
+
+
+                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng point) {
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(point));
+                        pickupPoint = point;
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(point));
+                        confirmPickupPointButton.setAlpha(1f);
+                        confirmPickupPointButton.setClickable(true);
+                        confirmPickupPointButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                welcomeText.setVisibility(View.GONE);
+                                mainButton.setVisibility(View.GONE);
+                                confirmPickupPointButton.startAnimation(animFadeOut);
+                                bottomSheetBehavior.setPeekHeight(80);
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                confirmPickupPointButton.setVisibility(View.GONE);
+                                mMap.setOnMapClickListener(null);
+                                pointSelected = true;
+                                pointSelectedText.setVisibility(View.VISIBLE);
+                                pointSelectedText.setText("Pickup point selected, please select your ride.");
+
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+
 
      if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -277,34 +330,43 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                 @Override
                                 public boolean onClusterItemClick(CarClusterMarker item) {
 
-                                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(item.getPosition()));
-                                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                    if (pointSelected == false) {
+                                        Toast.makeText(RiderMapsActivity.this, "Please select your pickup point.", Toast.LENGTH_SHORT).show();
 
-                                    hideWelcomeShowDriverDisplay(item);
+                                    } else {
+                                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(item.getPosition()));
+                                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-                                    driverName.setText(item.getUser().getUser().fName + " " + item.getUser().getUser().lName);
-                                    mainButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
 
-                                            Ride ride = new Ride(item.getUser(), currentUserLocation, null);
+                                        hideWelcomeShowDriverDisplay(item);
 
-                                            db.collection("Rides").add(ride).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
+                                        driverName.setText(item.getUser().getUser().fName + " " + item.getUser().getUser().lName);
+                                        mainButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
 
-                                                    Toast.makeText(RiderMapsActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
+                                                pointSelected = false;
+                                                PickupPt pickupPt = new PickupPt(pickupPoint.latitude, pickupPoint.longitude);
+                                                Ride ride = new Ride(item.getUser(), currentUserLocation, null, pickupPt);
 
-                                                    String requestID = documentReference.getId();
-                                                    listenForResponse(requestID);
-                                                    showWaitingForResponseDisplay(item);
+                                                db.collection("Rides").add(ride).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
 
-                                                }
-                                            });
-                                        }
-                                    });
+                                                        Toast.makeText(RiderMapsActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
 
-                                    return true;
+                                                        String requestID = documentReference.getId();
+                                                        listenForResponse(requestID);
+                                                        showWaitingForResponseDisplay(item);
+
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                        return true;
+                                    }
+                                    return false;
                                 }
                             });
                             clusterManager.cluster();
@@ -480,7 +542,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
 
     public void hideWelcomeShowDriverDisplay(CarClusterMarker item) { welcomeText.startAnimation(animFadeOut);
-
+        pointSelectedText.setVisibility(View.GONE);
         welcomeText.setVisibility(View.GONE);
         carDriving.startAnimation(animFadeOut);
         carDriving.setVisibility(View.GONE);
@@ -491,6 +553,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         name.setVisibility(View.VISIBLE);
         markerProfilePic.startAnimation(animFadeIn);
         markerProfilePic.setVisibility(View.VISIBLE);
+        mainButton.setText("Request ride.");
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
 }
@@ -562,13 +625,22 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onBackPressed() {//open prompt are you sure?
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED && pointSelected == false) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
         else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setPeekHeight(80);
             dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        } else {
+        }
+        else if(pointSelected = true){
+            mMap.clear();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            pointSelectedText.setVisibility(View.GONE);
+            mainButton.setVisibility(View.VISIBLE);
+            welcomeText.setVisibility(View.VISIBLE);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+        else {
             locationManager.removeUpdates(locationListener);
             db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
             Intent intent = new Intent(this, PreScreen.class);
