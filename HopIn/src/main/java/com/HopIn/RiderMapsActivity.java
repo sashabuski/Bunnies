@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +68,9 @@ import java.util.List;
  */
 public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+
+
+
     private GoogleMap mMap;
     private ActivityRiderMapsBinding binding;
     private LocationListener locationListener;
@@ -84,7 +86,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private ArrayList<CarClusterMarker> mClusterMarkers = new ArrayList<>();
     private View bottomSheetView, dashboardSheetView;
     private BottomSheetBehavior bottomSheetBehavior,dashboardSheetBehavior;
-    private Button mainButton;
+    private Button mainButton, selectPointButton;
     private TextView driverName;
     private ShapeableImageView driverPic, markerProfilePic;
     private Animation animFadeIn, animFadeOut;
@@ -93,6 +95,24 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private LatLng pickupPoint;
     private ExtendedFloatingActionButton confirmPickupPointButton;
     private Boolean pointSelected = false;
+
+    private RiderSystemStatus systemStatus = RiderSystemStatus.RESTING_MAP;
+
+
+    public enum RiderSystemStatus {
+        RESTING_MAP,
+        SELECTING_POINT,
+        POINT_SELECTED,
+        POINT_CONFIRMED,
+        DRIVER_SELECTED,
+        DRIVER_REQUESTED,
+        AWAITING_DRIVER,
+        DRIVER_DECLINED,
+        DRIVER_ARRIVED,
+        IN_TRANSIT;
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +156,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
         pointSelectedText = findViewById(R.id.pointSelectedText);
         confirmPickupPointButton = findViewById(R.id.confirmPickupPointButton);
+
+        selectPointButton = findViewById(R.id.selectPointButton);
         mainButton = findViewById(R.id.mainButton);
         driverName = findViewById(R.id.driverName);
         driverPic = findViewById(R.id.profilePic);
@@ -146,6 +168,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         loading =  findViewById(R.id.loading);
         markerProfilePic = findViewById(R.id.markerProfilePic);
         confirmPickupPointButton.setVisibility(View.GONE);
+        selectPointButton.setVisibility(View.GONE);
         mainButton.setVisibility(View.GONE);
         driverName.setVisibility(View.GONE);
         driverPic.setVisibility(View.GONE);
@@ -186,13 +209,16 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mMap = googleMap;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
         welcomeText.setText("Welcome "+currentUser.fName);
-        mainButton.setText("Select pickup point");
-        mainButton.setVisibility(View.VISIBLE);
+        selectPointButton.setText("Select pickup point");
+        selectPointButton.setVisibility(View.VISIBLE);
+
+
+        systemStatus = RiderSystemStatus.RESTING_MAP;
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         getDriversWithRealtimeUpdates(mMap, getCurrentFocus());
 
-        mainButton.setOnClickListener(new View.OnClickListener() {
+        selectPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 bottomSheetBehavior.setPeekHeight(0);
@@ -203,11 +229,17 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                 confirmPickupPointButton.setVisibility(View.VISIBLE);
 
 
+                systemStatus = RiderSystemStatus.SELECTING_POINT;
+
                 mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng point) {
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(point));
+
+
+                        systemStatus = RiderSystemStatus.POINT_SELECTED;
+
                         pickupPoint = point;
                         mMap.animateCamera(CameraUpdateFactory.newLatLng(point));
                         confirmPickupPointButton.setAlpha(1f);
@@ -215,8 +247,12 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                         confirmPickupPointButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+
+
+                                systemStatus = RiderSystemStatus.POINT_CONFIRMED;
+
                                 welcomeText.setVisibility(View.GONE);
-                                mainButton.setVisibility(View.GONE);
+                                selectPointButton.setVisibility(View.GONE);
                                 confirmPickupPointButton.startAnimation(animFadeOut);
                                 bottomSheetBehavior.setPeekHeight(80);
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -330,6 +366,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                 @Override
                                 public boolean onClusterItemClick(CarClusterMarker item) {
 
+
+                                    systemStatus = RiderSystemStatus.DRIVER_SELECTED;
+
                                     if (pointSelected == false) {
                                         Toast.makeText(RiderMapsActivity.this, "Please select your pickup point.", Toast.LENGTH_SHORT).show();
 
@@ -344,6 +383,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                         mainButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
+
+                                                systemStatus = RiderSystemStatus.DRIVER_REQUESTED;
 
                                                 pointSelected = false;
                                                 PickupPt pickupPt = new PickupPt(pickupPoint.latitude, pickupPoint.longitude);
@@ -415,6 +456,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                             if (newRide.getStatus().equals("ACCEPTED")) {
                                 db.collection("Rides").document(reqID).update("status", "PICKUP");
 
+                                systemStatus = RiderSystemStatus.AWAITING_DRIVER;
+
                                 showConfirmPickupDisplay(newRide);
 
                                 mainButton.setOnClickListener(new View.OnClickListener() {
@@ -428,6 +471,8 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                         mainButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
+
+                                                systemStatus = RiderSystemStatus.IN_TRANSIT;
 
                                                 findViewById(R.id.transitAnimation).startAnimation(animFadeOut);
                                                 findViewById(R.id.transitAnimation).setVisibility(View.GONE);
@@ -446,12 +491,17 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                 //OPEN
                                 db.collection("Rides").document(reqID).update("status", "TERMINATED");
 
+                                systemStatus = RiderSystemStatus.DRIVER_DECLINED;
+
                                 showDeclinedDisplay(newRide);
 
                                 mainButton.setOnClickListener(new View.OnClickListener() {
 
                                      @Override
                                      public void onClick(View view) {
+
+
+                                         systemStatus = RiderSystemStatus.RESTING_MAP;
 
                                      backToHomeDisplay();
 
@@ -498,6 +548,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                         if (newRide.getRider().getUser().email.equals(currentUser.email)) {
 
                             if (newRide.getStatus().equals("ARRIVED")) {
+
+
+                                systemStatus = RiderSystemStatus.DRIVER_ARRIVED;
+
                                 driverName.startAnimation(animFadeOut);
                                 driverName.setText("Your driver has arrived!");
                                 Toast.makeText(RiderMapsActivity.this, "Driver has arrived!", Toast.LENGTH_LONG).show();
@@ -625,30 +679,76 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     @Override
     public void onBackPressed() {//open prompt are you sure?
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED && pointSelected == false) {
+        if ((bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
-        else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+        else if(systemStatus == RiderSystemStatus.SELECTING_POINT){
+            mMap.setOnMapClickListener(null);
             bottomSheetBehavior.setPeekHeight(80);
-            dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-        else if(pointSelected = true){
-            mMap.clear();
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            confirmPickupPointButton.setVisibility(View.GONE);
             pointSelectedText.setVisibility(View.GONE);
-            mainButton.setVisibility(View.VISIBLE);
+            selectPointButton.setVisibility(View.VISIBLE);
             welcomeText.setVisibility(View.VISIBLE);
+            systemStatus = RiderSystemStatus.RESTING_MAP;
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
-        else {
+        else if(systemStatus == RiderSystemStatus.POINT_SELECTED){
+            mMap.clear();
+            pickupPoint = null;
+            confirmPickupPointButton.setVisibility(View.VISIBLE);
+            confirmPickupPointButton.setClickable(false);
+            confirmPickupPointButton.setAlpha(.7f);
+            systemStatus = RiderSystemStatus.SELECTING_POINT;
+
+        }
+        else if(systemStatus == RiderSystemStatus.POINT_CONFIRMED){
+            mMap.clear();
+            mMap.setOnMapClickListener(null);
+            bottomSheetBehavior.setPeekHeight(80);
+            confirmPickupPointButton.setVisibility(View.GONE);
+            pointSelectedText.setVisibility(View.GONE);
+            selectPointButton.setVisibility(View.VISIBLE);
+            welcomeText.setVisibility(View.VISIBLE);
+            systemStatus = RiderSystemStatus.RESTING_MAP;
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+
+        else if ((bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) && systemStatus == RiderSystemStatus.DRIVER_SELECTED){
+
+            mMap.clear();
+            mMap.setOnMapClickListener(null);
+            bottomSheetBehavior.setPeekHeight(80);
+            markerProfilePic.setVisibility(View.GONE);
+            name.setVisibility(View.GONE);
+            pointSelectedText.setVisibility(View.GONE);
+            mainButton.setVisibility(View.GONE);
+            carDriving.setVisibility(View.VISIBLE);
+            welcomeText.setVisibility(View.VISIBLE);
+            selectPointButton.setVisibility(View.VISIBLE);
+            systemStatus = RiderSystemStatus.RESTING_MAP;
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        }
+
+        else if ((bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) && (systemStatus == RiderSystemStatus.RESTING_MAP || systemStatus == RiderSystemStatus.DRIVER_REQUESTED
+                || systemStatus == RiderSystemStatus.AWAITING_DRIVER|| systemStatus == RiderSystemStatus.IN_TRANSIT || systemStatus == RiderSystemStatus.DRIVER_ARRIVED)){
+
+            //are you sure you wanna leave bruh all rides will be cancelled.
+
             locationManager.removeUpdates(locationListener);
             db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
             Intent intent = new Intent(this, PreScreen.class);
             startActivity(intent);
         }
+        else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setPeekHeight(80);
+            dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+      
 
 
     }
+
 }
 
 

@@ -71,6 +71,20 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
+                android:id="@+id/selectPointButton"
+                android:layout_width="365dp"
+                android:layout_height="58dp"
+                android:background="@drawable/button_round"
+                android:text="Hop In"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.938" />
+
+            <Button
                 android:id="@+id/mainButton"
                 android:layout_width="365dp"
                 android:layout_height="58dp"
