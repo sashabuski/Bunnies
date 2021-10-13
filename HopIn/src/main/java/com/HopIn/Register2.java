@@ -5,21 +5,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,13 +35,14 @@ import java.util.Map;
  * +other input requirements
  *
  */
-public class Register2 extends AppCompatActivity {
+public class Register2 extends AppCompatActivity implements Serializable {
 
     private EditText emailEditText, passwordEditText, repasswordEditText;
     private Button createButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +51,7 @@ public class Register2 extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        createButton = (Button)findViewById(R.id.login);
+        createButton = (Button)findViewById(R.id.createButton);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
         repasswordEditText = (EditText) findViewById(R.id.repassword);
@@ -54,8 +61,10 @@ public class Register2 extends AppCompatActivity {
             public void onClick(View view) {
 
                 registerUser();
+
             }
         });
+
     }
 
     /**
@@ -68,9 +77,6 @@ public class Register2 extends AppCompatActivity {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String repassword = repasswordEditText.getText().toString().trim();
-
-        Intent intent;
-        intent = new Intent(this, enterName.class);
 
         if(!password.equals(repassword)){
             repasswordEditText.setError("Passwords do not match.");
@@ -103,14 +109,15 @@ public class Register2 extends AppCompatActivity {
             return;
         }
 
-        User user = new User(email, password);
+        user = new User(email, password);
+
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NotNull Task<AuthResult> task) {
 
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -118,24 +125,43 @@ public class Register2 extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NotNull Task<Void> task) {
 
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
 
-                                        Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(Register2.this, "Account created", Toast.LENGTH_LONG).show();
 
-                                    }else{
-                                        Toast.makeText(Register2.this, "Account creation failed.", Toast.LENGTH_LONG).show();
-
+                                    } else {
+                                        Toast.makeText(Register2.this, " Please verify your email", Toast.LENGTH_LONG).show();
                                     }
+
+
+                                }
+                            });
+                            // send verification link to registered email
+
+                            FirebaseUser muser = mAuth.getCurrentUser();
+
+                            muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                    Log.d("tag", "onFailure: Email not send " + e.getMessage());
                                 }
                             });
 
+                            startActivity(new Intent(Register2.this, Verification.class));
                             db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
-                            intent.putExtra("user", user);
-                            startActivity(intent);
+                            // startActivity(intent);
                         }
                     }
                 });
-    return;
+
+
     }
 
 }

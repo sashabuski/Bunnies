@@ -232,6 +232,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dashboard"
         android:layout_width="match_parent"
@@ -373,8 +374,6 @@
                     />
             </androidx.cardview.widget.CardView>
 
-
-
         </GridLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -390,6 +389,7 @@
             app:tint="#5181F1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

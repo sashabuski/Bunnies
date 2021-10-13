@@ -87,7 +87,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private View bottomSheetView, dashboardSheetView;
     private BottomSheetBehavior bottomSheetBehavior,dashboardSheetBehavior;
     private Button mainButton, selectPointButton;
-    private TextView driverName;
+    private TextView driverName, carModelText, carPlateText, codeText;
     private ShapeableImageView driverPic, markerProfilePic;
     private Animation animFadeIn, animFadeOut;
     private TextView transitText, welcomeText, name, dashboardUserName, pointSelectedText;
@@ -112,6 +112,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         IN_TRANSIT;
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,15 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         driverPic.setVisibility(View.GONE);
         loading.setVisibility(View.GONE);
         markerProfilePic.setVisibility(View.GONE);
+
+        
+        carModelText = findViewById(R.id.carModel);
+        carPlateText = findViewById(R.id.carNumberPlate);
+        codeText = findViewById(R.id.verificationCode);
+        carModelText.setVisibility(View.GONE);
+        carPlateText.setVisibility(View.GONE);
+        codeText.setVisibility(View.GONE);
+
 
         findViewById(R.id.waitingText).setVisibility(View.GONE);
         findViewById(R.id.callBut).setVisibility(View.GONE);
@@ -272,6 +282,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
 
      if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -372,10 +383,14 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                                     if (pointSelected == false) {
                                         Toast.makeText(RiderMapsActivity.this, "Please select your pickup point.", Toast.LENGTH_SHORT).show();
 
+
                                     } else {
                                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(item.getPosition()));
                                         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+                                        driverName.setText(item.getUser().getUser().fName + " " + item.getUser().getUser().lName);
+
+                                        carPlateText.setText(item.getUser().getUser().carNumber);
 
                                         hideWelcomeShowDriverDisplay(item);
 
@@ -497,22 +512,25 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                                 mainButton.setOnClickListener(new View.OnClickListener() {
 
-                                     @Override
-                                     public void onClick(View view) {
+                                    @Override
+                                    public void onClick(View view) {
+                                        
+                                        systemStatus = RiderSystemStatus.RESTING_MAP;
+                                        backToHomeDisplay();
+
+                                    }
+                                });
 
 
-                                         systemStatus = RiderSystemStatus.RESTING_MAP;
-
-                                     backToHomeDisplay();
-
-                                     }
-                                 });
                             }
                         }
                     }
                 }
             }
-       });
+
+        });
+
+
     }
 
     public boolean isTimestampLive(Date date) {
@@ -537,6 +555,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
             public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot value, @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
                 if (error != null) {
 
+
                     return;
                 }
                 if (value != null) {
@@ -550,11 +569,13 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
                             if (newRide.getStatus().equals("ARRIVED")) {
 
 
+
                                 systemStatus = RiderSystemStatus.DRIVER_ARRIVED;
 
                                 driverName.startAnimation(animFadeOut);
                                 driverName.setText("Your driver has arrived!");
                                 Toast.makeText(RiderMapsActivity.this, "Driver has arrived!", Toast.LENGTH_LONG).show();
+
                                 mainButton.setAlpha(1f);
                                 mainButton.setClickable(true);
                             }
@@ -575,6 +596,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         welcomeText.setVisibility(View.VISIBLE);
         carDriving.startAnimation(animFadeIn);
         carDriving.setVisibility(View.VISIBLE);
+        carPlateText.setVisibility(View.GONE);
     }
 
     public void showDeclinedDisplay(Ride newRide){
@@ -590,9 +612,10 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mainButton.setText("Select New Ride");
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
-
+        carPlateText.setVisibility(View.VISIBLE);
 
     }
+
 
 
     public void hideWelcomeShowDriverDisplay(CarClusterMarker item) { welcomeText.startAnimation(animFadeOut);
@@ -610,9 +633,12 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mainButton.setText("Request ride.");
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
-}
+
+    }
 
     public void showTransitDisplay(){
+
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         markerProfilePic.startAnimation(animFadeOut);
         markerProfilePic.setVisibility(View.GONE);
@@ -629,10 +655,12 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mainButton.setText("Complete Ride");
         findViewById(R.id.callBut).setVisibility(View.GONE);
         findViewById(R.id.chatBut).setVisibility(View.GONE);
-
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         findViewById(R.id.markerProfilePic).startAnimation(animFadeIn);
         mainButton.startAnimation(animFadeIn);
         mainButton.setVisibility(View.VISIBLE);
+        carPlateText.setVisibility(View.GONE);
+
     }
 
     public void showConfirmPickupDisplay(Ride newRide){
@@ -654,6 +682,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         findViewById(R.id.chatBut).setVisibility(View.VISIBLE);
         mainButton.setClickable(false);
         mainButton.setAlpha(.5f);
+        carPlateText.setText(newRide.getDriver().getUser().carNumber);
+        carPlateText.setVisibility(View.VISIBLE);
+
     }
 
     public void showWaitingForResponseDisplay(CarClusterMarker item){
@@ -675,6 +706,9 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         waitingText.setText("Ride request sent to " + item.getUser().getUser().fName + ". Waiting for confirmation..");
         waitingText.startAnimation(animFadeIn);
         waitingText.setVisibility(View.VISIBLE);
+
+        carPlateText.setVisibility(View.GONE);
+
     }
 
     @Override
