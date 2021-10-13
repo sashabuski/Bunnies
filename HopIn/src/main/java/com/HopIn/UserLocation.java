@@ -3,6 +3,7 @@ package com.HopIn;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Date;
  * ensure the DB only contains current riders/drivers.
  *
  */
-public class UserLocation {
+public class UserLocation implements Serializable {
 
     private User user;
     private GeoPoint geoPoint;

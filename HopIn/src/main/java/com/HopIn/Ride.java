@@ -1,27 +1,43 @@
 package com.HopIn;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Ride {
+public class Ride implements Serializable {
 
     private UserLocation Driver;
     private UserLocation Rider;
     private @ServerTimestamp Date timestamp;
     private String status;
-    public Ride(UserLocation driver, UserLocation rider, Date timestamp) {
-        Driver = driver;
-        Rider = rider;
+    private PickupPt pickupPoint;
+
+    public Ride(UserLocation driver, UserLocation rider, Date timestamp, PickupPt pickupPoint) {
+        this.Driver = driver;
+        this.Rider = rider;
+        this.pickupPoint = pickupPoint;
         this.timestamp = timestamp;
         this.status = "REQUESTED";
     }
 
     public Ride() {
-
+        this.Driver = null;
+        this.Rider = null;
+        this.pickupPoint = null;
+        this.timestamp = null;
+        this.status = null;
     }
 
+    public PickupPt getPickupPoint() {
+        return pickupPoint;
+    }
 
+    public void setPickupPoint(PickupPt pickupPoint) {
+        this.pickupPoint = pickupPoint;
+    }
     public UserLocation getDriver() {
         return Driver;
     }
