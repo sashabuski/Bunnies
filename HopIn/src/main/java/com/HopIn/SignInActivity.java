@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +30,10 @@ import org.jetbrains.annotations.NotNull;
 public class SignInActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
-    int autoSave;
     FirebaseAuth mAuth;
     private Button signInButton;
     private EditText emailEditText, passwordEditText;
+    ProgressBar loading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class SignInActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        loading = findViewById(R.id.loading);
         signInButton = (Button)findViewById(R.id.SignInButton);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
@@ -52,11 +54,13 @@ public class SignInActivity extends AppCompatActivity {
 
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
+                loading.setVisibility(View.VISIBLE);
 
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            loading.setVisibility(View.GONE);
                             Intent intent;
                             intent = new Intent(SignInActivity.this, PreScreen.class);
                             startActivity(intent);

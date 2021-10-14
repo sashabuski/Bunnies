@@ -30,15 +30,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences sharedPreferences;
     private Button SignInButton;
     private Button createAccountButton;
     FirebaseAuth mAuth;
     FirebaseUser muser;
     FirebaseFirestore db;
-    public static final String filename = "login";
-    public static final String Username = "username";
-    TextView textMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
-
-        /*sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(Username)){
-            textMessage.setText("Hello " + sharedPreferences.getString(Username, ""));
-        }*/
-
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
