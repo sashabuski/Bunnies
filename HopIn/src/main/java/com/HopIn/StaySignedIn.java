@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class StaySignedIn extends Application
 {
+
     @Override
     public void onCreate()
     {
@@ -22,7 +23,7 @@ public class StaySignedIn extends Application
             Intent intent = new Intent(StaySignedIn.this, PreScreen.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            
+            Toast.makeText(StaySignedIn.this, " Welcome back ! ", Toast.LENGTH_SHORT).show();
         }
     }
 }

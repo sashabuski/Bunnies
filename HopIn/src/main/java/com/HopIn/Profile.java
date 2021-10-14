@@ -41,8 +41,6 @@ public class Profile extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser mUser = mAuth.getCurrentUser();
-
     User currentUser;
 
     private Button updateButton;
@@ -56,7 +54,6 @@ public class Profile extends AppCompatActivity {
     private TextView txtConfirmation;
     ImageView profileImage;
     StorageReference storageReference;
-    Button changeProfileImage;
     private static final int GALLERY_INTENT_CODE = 1023;
 
     AlertDialog dialogEmail;
@@ -77,12 +74,7 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        mUser = mAuth.getCurrentUser();
-
-
-
         profileImage = findViewById(R.id.profileImage);
-        //changeProfileImage = findViewById(R.id.changeProfile);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
