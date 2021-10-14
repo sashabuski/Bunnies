@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.HopIn">
+    package="com.HopIn" >
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="anroid.permission.STORAGE"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="anroid.permission.STORAGE" />
 
     <application
+        android:name=".StaySignedIn"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="HopIn"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LoginPrototype">
+        android:theme="@style/Theme.LoginPrototype"
+        android:screenOrientation="portrait">
         <activity
             android:name=".Profile"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -43,15 +45,22 @@
         -->
         <activity
             android:name=".DriverMapsActivity"
-            android:label="@string/title_activity_driver_maps" />
+            android:label="@string/title_activity_driver_maps"
+            android:screenOrientation="portrait" />
         <!--
 <activity
             android:name=".DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
         -->
-        <activity android:name=".PreScreen" />
-        <activity android:name=".enterCar" />
-        <activity android:name=".enterName" />
+        <activity
+            android:name=".PreScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".enterCar"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".enterName"
+            android:screenOrientation="portrait" />
         <!--
 <activity
             android:name=".MapsActivity"
@@ -62,7 +71,9 @@
             android:name=".DMapsActivity"
             android:label="@string/title_activity_dmaps" />
         -->
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -71,12 +82,14 @@
         </activity>
         <activity
             android:name=".SignInActivity"
-            android:label="@string/title_activity_sign_in" />
+            android:label="@string/title_activity_sign_in"
+            android:screenOrientation="portrait" />
         <activity android:name=".Verification" />
         <activity android:name=".Register2" />
         <activity
             android:name=".RiderMapsActivity"
-            android:label="@string/title_activity_rider_maps" />
+            android:label="@string/title_activity_rider_maps"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

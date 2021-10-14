@@ -40,13 +40,14 @@ import com.squareup.picasso.Picasso;
 public class Profile extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser mUser = mAuth.getCurrentUser();
 
     User currentUser;
 
     private Button updateButton;
     private TextView txtWelcome;
-    private TextView txtEmail;
+    TextView txtEmail;
     private TextView txtFirstName;
     private TextView txtLastName;
     private TextView txtPhone;
@@ -76,6 +77,10 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        mUser = mAuth.getCurrentUser();
+
+
+
         profileImage = findViewById(R.id.profileImage);
         //changeProfileImage = findViewById(R.id.changeProfile);
 
@@ -84,7 +89,8 @@ public class Profile extends AppCompatActivity {
 
         storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference profileReference = storageReference.child(("users/" + mAuth.getCurrentUser().getUid()+"/profile.jpg"));
-        profileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        profileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).into(profileImage);

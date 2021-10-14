@@ -1,8 +1,9 @@
 package com.HopIn;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,8 +31,10 @@ import java.sql.SQLOutput;
  */
 public class PreScreen extends AppCompatActivity {
 
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser mUser = mAuth.getCurrentUser();
 
     User currentUser;
     TextView a,b,c,d,e,f;
@@ -38,19 +42,21 @@ public class PreScreen extends AppCompatActivity {
     Button nextButton;
     Intent driverIntent;
     Intent riderIntent;
-    public static final String filename = "login";
-    public static final String Username = "username";
-    TextView textMessage;
-    SharedPreferences sharedPreferences;
+    Button profileButton;
+    Intent profileIntent;
+    private Object SaveSharedPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pre_screen);
 
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
         currentUser = new User();
         zwitch = (Switch)findViewById(R.id.switch1);
-        nextButton = (Button)findViewById(R.id.button);
+
 
         a = (TextView)findViewById(R.id.a);
         b = (TextView)findViewById(R.id.b);
@@ -59,15 +65,11 @@ public class PreScreen extends AppCompatActivity {
         e = (TextView)findViewById(R.id.e);
         f = (TextView)findViewById(R.id.f);
 
-        sharedPreferences = getSharedPreferences(filename, Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(Username)){
-            textMessage.setText("Hello " + sharedPreferences.getString(Username, ""));
-        }
-
-
         driverIntent = new Intent(this, DriverMapsActivity.class);
         riderIntent = new Intent(this, RiderMapsActivity.class);
 
+
+        nextButton = (Button)findViewById(R.id.button);
         nextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -75,20 +77,24 @@ public class PreScreen extends AppCompatActivity {
                 if(zwitch.isChecked()){
                     driverIntent.putExtra("loggedUser", currentUser);
                     startActivity(driverIntent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }else{
                     riderIntent.putExtra("loggedUser", currentUser);
                     startActivity(riderIntent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
 
             }});
 
-        DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getUid());
+
+        DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 currentUser = documentSnapshot.toObject(User.class);
-                a.setText(currentUser.getEmail());//
-                b.setText(currentUser.getPassword());
+                a.setText(currentUser.getEmail());
+                //b.setText(currentUser.getPassword());
+                b.setText("Password Not Displayed");
                 c.setText(currentUser.getfName());
                 d.setText(currentUser.getlName());
                 e.setText(currentUser.getCarModel());
@@ -96,15 +102,65 @@ public class PreScreen extends AppCompatActivity {
             }
         });
 
+        profileButton = findViewById(R.id.btnProfile);
+        profileButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                openProfile();
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
     }
 
     @Override
     public void onBackPressed(){
-
-        FirebaseAuth.getInstance().signOut();
         Intent intent;
         intent = new Intent(this, MainActivity.class);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Do you want to LOGOUT?");
+        alertDialogBuilder.setPositiveButton("yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        FirebaseAuth.getInstance().signOut();
+
+                        Intent intent = new Intent(PreScreen.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        Toast.makeText(PreScreen.this, "Logged out.", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //finish();
+                Toast.makeText(PreScreen.this, "You clicked the no button", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void openProfile(){
+
+        Intent intent = new Intent(this, Profile.class);
         startActivity(intent);
-        Toast.makeText(PreScreen.this, "Logged out.", Toast.LENGTH_LONG).show();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        startActivity(getIntent());
     }
 }
