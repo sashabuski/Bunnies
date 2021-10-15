@@ -1,4 +1,4 @@
-package com.hopln;
+package com.HopIn;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -47,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void skip()
     {
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 }
