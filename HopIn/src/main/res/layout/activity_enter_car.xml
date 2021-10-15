@@ -4,18 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".enterCar">
+    tools:context=".enterCar"
+    android:background="@color/light_pink">
+
+    <TextView
+        android:id="@+id/entercartext"
+        android:layout_width="107dp"
+        android:layout_height="39dp"
+        android:text="Enter Your Car"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.255" />
+
+    <ImageView
+        android:id="@+id/bunnylogo"
+        android:layout_width="161dp"
+        android:layout_height="104dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/pinkwabbit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.09" />
+
     <EditText
         android:id="@+id/carModel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="284dp"
         android:layout_marginEnd="24dp"
         android:hint="Car Model"
         android:inputType="textPersonName"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +52,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="24dp"
         android:hint="Number Plate"
         android:imeActionLabel="@string/action_sign_in_short"
@@ -40,25 +68,25 @@
         android:id="@+id/nextButton"
         android:layout_width="293dp"
         android:layout_height="50dp"
+        android:background="@drawable/rounded_button"
         android:text="Next"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.342" />
+        app:layout_constraintVertical_bias="0.675" />
 
     <Button
         android:id="@+id/skipButton"
-        android:layout_width="73dp"
-        android:layout_height="42dp"
+        android:layout_width="293dp"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_button"
         android:text="Skip"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="#A4A7AB"
-        app:backgroundTint="#FFFFFF"
-        app:iconTint="#2196F3"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.423" />
+        app:layout_constraintTop_toBottomOf="@+id/nextButton"
+        app:layout_constraintVertical_bias="0.087" />
 </androidx.constraintlayout.widget.ConstraintLayout>

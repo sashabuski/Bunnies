@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="createAccountButton" type="id" />
+    <item name="changeProfile" type="id" />
+    <item name="profileImage" type="id" />
 </resources>

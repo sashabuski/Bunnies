@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -43,13 +45,16 @@ public class Register2 extends AppCompatActivity implements Serializable {
     private FirebaseFirestore db;
 
     User user;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    //@Override
+    protected void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register2);
 
+
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+
 
         createButton = (Button)findViewById(R.id.createButton);
         emailEditText = (EditText) findViewById(R.id.username);
@@ -125,25 +130,26 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                 @Override
                                 public void onComplete(@NotNull Task<Void> task) {
 
-                                    if (task.isSuccessful()) {
 
-                                        Toast.makeText(Register2.this, "Account created", Toast.LENGTH_LONG).show();
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
 
                                     } else {
-                                        Toast.makeText(Register2.this, " Please verify your email", Toast.LENGTH_LONG).show();
-                                    }
+                                        Toast.makeText(Register2.this, "Please verify email", Toast.LENGTH_LONG).show();
 
+                                    }
 
                                 }
                             });
-                            // send verification link to registered email
 
+                            // sends verification link to registered email
                             FirebaseUser muser = mAuth.getCurrentUser();
 
                             muser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
+
 
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -155,6 +161,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
                             });
 
                             startActivity(new Intent(Register2.this, Verification.class));
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             db.collection("Users").document(mAuth.getCurrentUser().getUid()).set(user);
                             // startActivity(intent);
                         }
@@ -164,4 +171,9 @@ public class Register2 extends AppCompatActivity implements Serializable {
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 }

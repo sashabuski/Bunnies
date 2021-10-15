@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +31,10 @@ import java.sql.SQLOutput;
  */
 public class PreScreen extends AppCompatActivity {
 
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser mUser = mAuth.getCurrentUser();
 
     User currentUser;
     TextView a,b,c,d,e,f;
@@ -42,10 +45,16 @@ public class PreScreen extends AppCompatActivity {
     Button profileButton;
     Intent profileIntent;
 
+    private Object SaveSharedPreference;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pre_screen);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         currentUser = new User();
         zwitch = (Switch)findViewById(R.id.switch1);
@@ -71,9 +80,11 @@ public class PreScreen extends AppCompatActivity {
                 if(zwitch.isChecked()){
                     driverIntent.putExtra("loggedUser", currentUser);
                     startActivity(driverIntent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }else{
                     riderIntent.putExtra("loggedUser", currentUser);
                     startActivity(riderIntent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }
 
             }});
@@ -99,6 +110,9 @@ public class PreScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openProfile();
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
 
@@ -115,7 +129,15 @@ public class PreScreen extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         FirebaseAuth.getInstance().signOut();
+   
+
+                        Intent intent = new Intent(PreScreen.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
                         Toast.makeText(PreScreen.this, "Logged out.", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -136,6 +158,9 @@ public class PreScreen extends AppCompatActivity {
 
         Intent intent = new Intent(this, Profile.class);
         startActivity(intent);
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
     }
 
     @Override
@@ -143,6 +168,10 @@ public class PreScreen extends AppCompatActivity {
     {
         super.onRestart();
         finish();
+
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+
         startActivity(getIntent());
     }
 }

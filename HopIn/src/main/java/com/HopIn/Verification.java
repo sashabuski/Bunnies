@@ -52,10 +52,8 @@ public class Verification extends AppCompatActivity implements Serializable {
         setContentView(R.layout.activity_verification);
 
         Intent intent;
-        intent = new Intent(this, enterName.class);
+        intent = new Intent(this, SignInActivity.class);
         Intent i = getIntent();
-       // resendCode = findViewById(R.id.resendCode);
-        //verifyMsg = findViewById(R.id.verifyMsg);
 
 
         db = FirebaseFirestore.getInstance();
@@ -68,16 +66,14 @@ public class Verification extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Verification.this, SignInActivity.class));
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
-/*if(!user.isEmailVerified()) {
-    startActivity(new Intent(getApplicationContext(), PreScreen.class));
 
+        //will fix in sprint 2
 
-
-    resendCode.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
 
             user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -97,9 +93,11 @@ public class Verification extends AppCompatActivity implements Serializable {
         /*
         resendCode.setVisibility(View.VISIBLE);
 
+
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+
 
 
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -117,6 +115,7 @@ public class Verification extends AppCompatActivity implements Serializable {
                     }
                 });
 
+
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -131,16 +130,19 @@ public class Verification extends AppCompatActivity implements Serializable {
                 });
 */
 
-
                 //intent.putExtra("user", user);
                // startActivity(intent);
 
                 currentuserID = mAuth.getCurrentUser().getUid();
             }
-       // });
 
 
-}
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
 
 
