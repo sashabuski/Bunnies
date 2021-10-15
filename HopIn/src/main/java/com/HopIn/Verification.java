@@ -54,7 +54,7 @@ public class Verification extends AppCompatActivity implements Serializable {
         Intent intent;
         intent = new Intent(this, SignInActivity.class);
         Intent i = getIntent();
-        //resendCode = findViewById(R.id.resendCode);
+
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -66,17 +66,55 @@ public class Verification extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Verification.this, SignInActivity.class));
+
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
 
         //will fix in sprint 2
 
-       /* resendCode.setVisibility(View.VISIBLE);
+
+            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Toast.makeText(v.getContext(), "Verification Email has been sent", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                }
+            });
+        }
+    });
+*/
+        /*
+        resendCode.setVisibility(View.VISIBLE);
+
 
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+
+
+
+                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(v.getContext(),
+                                "Verification Email has been sent.",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                    }
+                });
+
 
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -91,12 +129,13 @@ public class Verification extends AppCompatActivity implements Serializable {
                     }
                 });
 */
+
                 //intent.putExtra("user", user);
                // startActivity(intent);
 
                 currentuserID = mAuth.getCurrentUser().getUid();
             }
-        //});
+
 
 
     @Override
@@ -105,6 +144,6 @@ public class Verification extends AppCompatActivity implements Serializable {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
-    }
+
 
 

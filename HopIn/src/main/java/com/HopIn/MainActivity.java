@@ -65,7 +65,33 @@ public class MainActivity extends AppCompatActivity {
                 openSignIn();
             }
         });
+        
+        ImageView fab_twitter = findViewById(R.id.fab_twitter);
+        fab_twitter.setClickable(true);
+        fab_twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.tuiteblog.com/")));
+            }
+        });
 
+        ImageView fab_facebook = findViewById(R.id.fab_facebook);
+        fab_facebook.setClickable(true);
+        fab_facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/")));
+            }
+        });
+
+        ImageView fab_instagram = findViewById(R.id.fab_instagram);
+        fab_instagram.setClickable(true);
+        fab_instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.insarticle.com/")));
+            }
+        });
 
     }
 

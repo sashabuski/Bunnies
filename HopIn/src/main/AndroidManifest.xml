@@ -71,15 +71,21 @@
             android:name=".DMapsActivity"
             android:label="@string/title_activity_dmaps" />
         -->
+
+        <activity android:name=".SplashActivity">
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name=".MainActivity" />
         <activity
             android:name=".SignInActivity"
             android:label="@string/title_activity_sign_in"
@@ -88,8 +94,15 @@
         <activity android:name=".Register2" />
         <activity
             android:name=".RiderMapsActivity"
+
             android:label="@string/title_activity_rider_maps"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".Profile"
+            android:label="@string/title_profile" />
+
+
+
     </application>
 
 </manifest>

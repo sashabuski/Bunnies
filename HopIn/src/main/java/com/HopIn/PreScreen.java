@@ -44,7 +44,9 @@ public class PreScreen extends AppCompatActivity {
     Intent riderIntent;
     Button profileButton;
     Intent profileIntent;
+
     private Object SaveSharedPreference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class PreScreen extends AppCompatActivity {
 
         currentUser = new User();
         zwitch = (Switch)findViewById(R.id.switch1);
+
 
 
         a = (TextView)findViewById(R.id.a);
@@ -107,7 +110,9 @@ public class PreScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openProfile();
+
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
             }
         });
 
@@ -124,6 +129,7 @@ public class PreScreen extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         FirebaseAuth.getInstance().signOut();
+   
 
                         Intent intent = new Intent(PreScreen.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -131,6 +137,7 @@ public class PreScreen extends AppCompatActivity {
 
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
                         Toast.makeText(PreScreen.this, "Logged out.", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -151,7 +158,9 @@ public class PreScreen extends AppCompatActivity {
 
         Intent intent = new Intent(this, Profile.class);
         startActivity(intent);
+
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
     }
 
     @Override
@@ -159,7 +168,9 @@ public class PreScreen extends AppCompatActivity {
     {
         super.onRestart();
         finish();
+
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
 
         startActivity(getIntent());
     }

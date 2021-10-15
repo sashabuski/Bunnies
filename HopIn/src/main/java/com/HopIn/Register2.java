@@ -43,8 +43,7 @@ public class Register2 extends AppCompatActivity implements Serializable {
     private Button createButton;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    String currentuserID;
-    Button resendCode;
+
     User user;
     //@Override
     protected void onCreate(Bundle savedInstanceState){
@@ -73,7 +72,6 @@ public class Register2 extends AppCompatActivity implements Serializable {
 
     }
 
-
     /**
      * Method will only save to db if all input specifications have been passed.
      * used in onClickListener
@@ -84,9 +82,6 @@ public class Register2 extends AppCompatActivity implements Serializable {
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
         String repassword = repasswordEditText.getText().toString().trim();
-
-        /*Intent intent;
-        intent = new Intent(this, enterName.class);*/
 
         if(!password.equals(repassword)){
             repasswordEditText.setError("Passwords do not match.");
@@ -135,11 +130,13 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                 @Override
                                 public void onComplete(@NotNull Task<Void> task) {
 
+
                                     if (task.isSuccessful()){
                                         Toast.makeText(Register2.this, "Account created.", Toast.LENGTH_LONG).show();
 
                                     } else {
                                         Toast.makeText(Register2.this, "Please verify email", Toast.LENGTH_LONG).show();
+
                                     }
 
                                 }
@@ -152,6 +149,8 @@ public class Register2 extends AppCompatActivity implements Serializable {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(Register2.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
+
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
