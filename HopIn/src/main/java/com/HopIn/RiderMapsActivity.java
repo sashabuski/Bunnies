@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.content.Intent;
@@ -69,8 +71,6 @@ import java.util.List;
 public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 
-
-
     private GoogleMap mMap;
     private ActivityRiderMapsBinding binding;
     private LocationListener locationListener;
@@ -95,7 +95,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     private LatLng pickupPoint;
     private ExtendedFloatingActionButton confirmPickupPointButton;
     private Boolean pointSelected = false;
-
+    private String requestID;
     private RiderSystemStatus systemStatus = RiderSystemStatus.RESTING_MAP;
 
 
@@ -186,11 +186,25 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
 
         findViewById(R.id.waitingText).setVisibility(View.GONE);
-        findViewById(R.id.callBut).setVisibility(View.GONE);
+
         findViewById(R.id.chatBut).setVisibility(View.GONE);
         findViewById(R.id.transitAnimation).setVisibility(View.GONE);
         dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         FloatingActionButton menuButton = findViewById(R.id.menuButton);
+        findViewById(R.id.chatBut).setClickable(true);
+        findViewById(R.id.chatBut).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent;
+                intent = new Intent(RiderMapsActivity.this, ChatActivity.class);
+
+                intent.putExtra("ReqID", requestID);
+                intent.putExtra("userType", "Rider");
+
+                // send requestid to intent
+                startActivity(intent);
+            }
+        });
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -411,7 +425,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
 
                                                         Toast.makeText(RiderMapsActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
 
-                                                        String requestID = documentReference.getId();
+                                                        requestID = documentReference.getId();
                                                         listenForResponse(requestID);
                                                         showWaitingForResponseDisplay(item);
 
@@ -653,7 +667,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         findViewById(R.id.transitAnimation).startAnimation(animFadeIn);
         findViewById(R.id.transitAnimation).setVisibility(View.VISIBLE);
         mainButton.setText("Complete Ride");
-        findViewById(R.id.callBut).setVisibility(View.GONE);
+
         findViewById(R.id.chatBut).setVisibility(View.GONE);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         findViewById(R.id.markerProfilePic).startAnimation(animFadeIn);
@@ -678,7 +692,7 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         mainButton.setVisibility(View.VISIBLE);
         findViewById(R.id.markerProfilePic).startAnimation(animFadeIn);
         findViewById(R.id.markerProfilePic).setVisibility(View.VISIBLE);
-        findViewById(R.id.callBut).setVisibility(View.VISIBLE);
+
         findViewById(R.id.chatBut).setVisibility(View.VISIBLE);
         mainButton.setClickable(false);
         mainButton.setAlpha(.5f);

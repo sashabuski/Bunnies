@@ -92,6 +92,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private Animation animFadeOut;
     private TextView requestText, welcomeText, welcomeTip, dashboardUserName;
     private LottieAnimationView carDriving;
+    private String requestID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +137,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
          dashboardUserName =  findViewById(R.id.dashboardUserName);
          dashboardUserName.setText(currentUser.fName+" "+currentUser.lName);
-
+         findViewById(R.id.chatBut).setVisibility(View.GONE);
          welcomeTip = findViewById(R.id.welcomeTip);
          welcomeText = findViewById(R.id.welcomeText);
          declineBut = findViewById(R.id.declineButton);
@@ -151,6 +153,21 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
          findViewById(R.id.requestPic).setVisibility(View.GONE);
          dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
          FloatingActionButton menuButton = findViewById(R.id.menuButton);
+
+        findViewById(R.id.chatBut).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent;
+                intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
+
+                intent.putExtra("ReqID", requestID);
+                intent.putExtra("userType", "Driver");
+
+                // send requestid to intent
+                startActivity(intent);
+            }
+        });
+
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +271,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                     if (newRide.getStatus().equals("REQUESTED")) {
 
                                         if (isNewRequest(newRide)) {
+                                            requestID = snapshot.getId();
 
                                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                             requested = true;
@@ -278,7 +296,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                                     System.out.println(snapshot.getId());
 
                                                     LatLng a = new LatLng(currentUserLocation.getGeoPoint().getLatitude(),currentUserLocation.getGeoPoint().getLongitude());
-
+                                                    findViewById(R.id.chatBut).setVisibility(View.VISIBLE);
                                                     hideRequestDisplay();
                                                     //
 

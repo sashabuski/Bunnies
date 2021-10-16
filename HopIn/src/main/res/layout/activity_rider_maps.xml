@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
+
+
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -238,40 +241,18 @@
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/loading_please" />
 
+
             <ImageButton
                 android:id="@+id/chatBut"
-                android:layout_width="26dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="100dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="135dp"
-                android:layout_marginEnd="244dp"
-                android:layout_marginRight="244dp"
-                android:layout_marginBottom="81dp"
-                android:background="#5881F7"
-                android:src="@android:drawable/stat_notify_chat"
+                android:layout_width="52dp"
+                android:layout_height="47dp"
+                android:background="@drawable/chatbutton"
+                android:backgroundTint="#5181F1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/callBut"
-                android:layout_width="26dp"
-                android:layout_height="24dp"
-
-                android:layout_marginStart="244dp"
-                android:layout_marginLeft="244dp"
-                android:layout_marginTop="143dp"
-                android:layout_marginEnd="100dp"
-                android:layout_marginRight="100dp"
-                android:layout_marginBottom="92dp"
-                android:background="#5881F7"
-                android:src="@android:drawable/stat_sys_phone_call"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.599" />
 
             <TextView
                 android:id="@+id/transitText"
@@ -520,4 +501,10 @@
             app:tint="#5181F1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id= "@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
