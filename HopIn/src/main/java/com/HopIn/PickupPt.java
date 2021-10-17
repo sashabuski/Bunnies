@@ -2,11 +2,16 @@ package com.HopIn;
 
 import java.io.Serializable;
 
+/**
+ * PickupPt object used within ride object and used for rider to specify pickup point
+ * before requesting ride.
+ *
+ */
+
 public class PickupPt implements Serializable {
 
     private Double latitude;
     private Double longitude;
-
 
     public Double getLatitude() {
         return latitude;
@@ -28,8 +33,6 @@ public class PickupPt implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-
-
 
     public PickupPt() {}
 

@@ -11,19 +11,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
+/**
+ *  Custom recyclerview adapter to display chat messages accordingly in ChatActivity RecyclerView
+ *
+ */
 public class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private final Context context;
     ArrayList<MessageModel> list;
     public static final int MESSAGE_TYPE_IN = 1;
     public static final int MESSAGE_TYPE_OUT = 2;
 
+
     public CustomAdapter(Context context, ArrayList<MessageModel> list) { // you can pass other parameters in constructor
         this.context = context;
         this.list = list;
     }
+
     public void setMessageList(ArrayList<MessageModel> list) {
         this.list = list;
     }
+
     private class MessageInViewHolder extends RecyclerView.ViewHolder {
 
         TextView messageTV,dateTV;

@@ -17,6 +17,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
  * (not as a cluster (dot) with number of markers displayed on it) by returning false in overriding the shouldRenderAsCluster method .
  *
  */
+
 class CustomClusterRenderer<T extends CarClusterMarker> extends DefaultClusterRenderer<T>
 {
     public CustomClusterRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
@@ -32,8 +33,7 @@ class CustomClusterRenderer<T extends CarClusterMarker> extends DefaultClusterRe
     }
 
     @Override
-protected void onBeforeClusterItemRendered(CarClusterMarker item, MarkerOptions markerOptions) {
-
+    protected void onBeforeClusterItemRendered(CarClusterMarker item, MarkerOptions markerOptions) {
 
     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.carmarker));
 

@@ -2,6 +2,12 @@ package com.HopIn;
 
 import java.util.Date;
 
+/**
+ * Message object used when using the chat function of the app.
+ *
+ */
+
+
 public class MessageModel {
 
     public String message;

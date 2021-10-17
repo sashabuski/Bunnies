@@ -23,16 +23,29 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 
+/**
+ * This is the chat activity. It is accessible by the driver and rider during the pickup process.
+ * The database stores a Messages array with an ID corresponding with the Ride ID.
+ * This activity loads existing messages when opened, and loads updates i.e. new messages in real time.
+ *
+ */
+
 public class ChatActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-    Button send;
-    EditText fuckyou;
-    String RideID;
-    ArrayList<MessageModel> cdikendiednhuiehf = new ArrayList<>();
-    MessageList messagesList = new MessageList();
+    private RecyclerView recyclerView;
+    private Button send;
+    private EditText messageBox;
+    private String RideID;
+    private MessageList messagesList = new MessageList();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String userType;
+    private String userType;
+
+    /**
+     * OnCreate loads existing ride messages from database.
+     * Sets up send onClickListener to send messages to the DATABASE
+     *
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +53,28 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         userType = (String) getIntent().getSerializableExtra("userType");
-
         recyclerView = findViewById(R.id.recycler_view);
-        // CustomAdapter adapter = new CustomAdapter(this, messagesList.getMessagesList());
         RideID = (String) getIntent().getSerializableExtra("ReqID");
+        messageBox = findViewById(R.id.chat_message);
 
         listenForMessages();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //recyclerView.setAdapter(adapter);
 
         DocumentReference docRef = db.collection("Messages").document(RideID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            private static final String TAG = " just go fuck yourself";
 
+            private static final String TAG = "TAG";
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        // Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        messagesList = document.toObject(MessageList.class);
 
+                        messagesList = document.toObject(MessageList.class);
                         filterIncomingMessages(messagesList);
 
                         CustomAdapter adapter = new CustomAdapter(ChatActivity.this, messagesList.getMessagesList());
-
-
-                        // adapter.setMessageList(messagesList);
                         recyclerView.setAdapter(adapter);
                         recyclerView.scrollToPosition(messagesList.getMessagesList().size() - 1);
 
@@ -80,26 +87,21 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
         send = findViewById(R.id.chat_send);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
                 if (userType.equals("Rider")) {
-                    messagesList.getMessagesList().add(new MessageModel(fuckyou.getText().toString(), CustomAdapter.MESSAGE_TYPE_OUT, "Rider"));
+                    messagesList.getMessagesList().add(new MessageModel(messageBox.getText().toString(), CustomAdapter.MESSAGE_TYPE_OUT, "Rider"));
                 } else {
-                    messagesList.getMessagesList().add(new MessageModel(fuckyou.getText().toString(), CustomAdapter.MESSAGE_TYPE_OUT, "Driver"));
+                    messagesList.getMessagesList().add(new MessageModel(messageBox.getText().toString(), CustomAdapter.MESSAGE_TYPE_OUT, "Driver"));
                 }
 
-
                 RideID = (String) getIntent().getSerializableExtra("ReqID");
-
                 MessageList mL = new MessageList(messagesList.getMessagesList());
-
                 CustomAdapter adapter = new CustomAdapter(ChatActivity.this, messagesList.getMessagesList());
-                fuckyou.setText("");
+                messageBox.setText("");
                 recyclerView.setAdapter(adapter);
                 recyclerView.scrollToPosition(messagesList.getMessagesList().size() - 1);
 
@@ -109,16 +111,19 @@ public class ChatActivity extends AppCompatActivity {
 
                     }
                 });
-
             }
         });
-
-        fuckyou = findViewById(R.id.chat_message);
     }
 
+    /**
+     * filterIncomingMessages method uses current user type to organise message list into
+     * incoming and outgoing messages to be displayed appropriately in the RecyclerView.
+     *
+     *
+     * @param ml
+     */
 
     public void filterIncomingMessages(MessageList ml) {
-
 
         ArrayList<MessageModel> messages = ml.getMessagesList();
 
@@ -129,6 +134,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (message.userType.equals("Rider")) {
 
                     message.messageType = CustomAdapter.MESSAGE_TYPE_IN;
+
                 }else if(message.userType.equals("Driver")) {
 
                     message.messageType = CustomAdapter.MESSAGE_TYPE_OUT;
@@ -141,6 +147,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (message.userType.equals("Driver")) {
 
                     message.messageType = CustomAdapter.MESSAGE_TYPE_IN;
+
                 }else if(message.userType.equals("Rider")) {
 
                     message.messageType = CustomAdapter.MESSAGE_TYPE_OUT;
@@ -150,6 +157,11 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * listenForMessages method implements snapshotListener to listen for new messages added to this rides messages collection.
+     * onEvent, the whole message list is drawn from DB, filtered using filterIncomingMessages and displayed in the recyclerView.
+     *
+     */
 
     public void listenForMessages() {
         FirebaseFirestore.getInstance()
@@ -163,16 +175,10 @@ public class ChatActivity extends AppCompatActivity {
                 if (value.exists()) {
 
                     messagesList = value.toObject(MessageList.class);
-
                     filterIncomingMessages(messagesList);
-
                     CustomAdapter adapter = new CustomAdapter(ChatActivity.this, messagesList.getMessagesList());
-
-
-                    // adapter.setMessageList(messagesList);
                     recyclerView.setAdapter(adapter);
                     recyclerView.scrollToPosition(messagesList.getMessagesList().size() - 1);
-
                 }
             }
         });

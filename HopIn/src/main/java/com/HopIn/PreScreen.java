@@ -50,8 +50,6 @@ public class PreScreen extends AppCompatActivity {
         currentUser = new User();
         zwitch = (Switch)findViewById(R.id.switch1);
 
-
-
         a = (TextView)findViewById(R.id.a);
         b = (TextView)findViewById(R.id.b);
         c = (TextView)findViewById(R.id.c);
@@ -61,7 +59,6 @@ public class PreScreen extends AppCompatActivity {
 
         driverIntent = new Intent(this, DriverMapsActivity.class);
         riderIntent = new Intent(this, RiderMapsActivity.class);
-
 
         nextButton = (Button)findViewById(R.id.button);
         nextButton.setOnClickListener(new View.OnClickListener(){
@@ -77,7 +74,6 @@ public class PreScreen extends AppCompatActivity {
                 }
 
             }});
-
 
         DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

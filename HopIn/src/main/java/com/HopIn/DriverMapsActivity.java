@@ -66,7 +66,7 @@ import java.util.List;
  * This Map activity is seen by the drivers. It also sends realtime updates of the drivers geopoint
  * to the database "drivers" table.
  *
- * ---Need to fix when location updates are turned off + remove document from "drivers" DB collection.
+ * @Author: Sasha Buskin
  * ---(onStop, onResume, onDestroy)
  */
 
@@ -94,6 +94,15 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private LottieAnimationView carDriving;
     private String requestID;
 
+    /**
+     * onCreate sets up bottomsheet behaviors for dashboard, bottomsheet.
+     * Sets up onClickListeners for chat button and menu button.
+     * Uses fusedLocationClient to get initial location of user.
+     *
+     *
+     * @param savedInstanceState
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,8 +122,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         dashboardSheetView = (View)findViewById(R.id.dashboard);
         dashboardSheetBehavior = BottomSheetBehavior.from(dashboardSheetView);
 
-        icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
-
         currentUser = (User) (getIntent().getSerializableExtra("loggedUser"));
         currentUserLocation = new UserLocation(currentUser);
 
@@ -123,6 +130,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
             return;
         }
+
         fusedLocation.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<Location> task) {
@@ -133,7 +141,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
             }
         });
-
 
          dashboardUserName =  findViewById(R.id.dashboardUserName);
          dashboardUserName.setText(currentUser.fName+" "+currentUser.lName);
@@ -163,11 +170,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 intent.putExtra("ReqID", requestID);
                 intent.putExtra("userType", "Driver");
 
-                // send requestid to intent
                 startActivity(intent);
             }
         });
-
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +181,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 {
                     bottomSheetBehavior.setPeekHeight(80);
                     dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
                 }else {
+
                     bottomSheetBehavior.setPeekHeight(0);
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
@@ -186,12 +193,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                 }
             }
         });
-
     }
 
     /**
      * Implements a locationListener that sends real time geopoint updates to the driver DB collection
      *
+     * @Author: Sasha Buskin
      * @param googleMap
      */
     @Override
@@ -200,23 +207,20 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         mMap = googleMap;
 
         listenForRequests(mMap );
+
         welcomeText.setText("Good Morning "+currentUser.fName+".");
 
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle));
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        googleMap.setMyLocationEnabled(true);
-        updateAndZoomLocation(mMap, fusedLocation);
 
+        googleMap.setMyLocationEnabled(true);
+
+        updateAndZoomLocation(mMap, fusedLocation);
 
         locationListener = new LocationListener() {
             @Override
@@ -230,6 +234,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
                 db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).set(currentUserLocation);
                 if(!requested) {
+
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                 }
@@ -237,14 +242,25 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         };
 
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 2, locationListener);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
 
+        try {
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 2, locationListener);
+
+        } catch (SecurityException e) {
+
+            e.printStackTrace();
+
+        }
     }
 
+    /**
+     * Handles incoming requests. Detects user specific ride requests through snapshotListener, handles display change,
+     * handles response i.e. accept/decline db updates.
+     *
+     * @Author: Sasha Buskin
+     * @param googleMap
+     */
 
     public void listenForRequests(GoogleMap googleMap){
     FirebaseFirestore.getInstance()
@@ -271,34 +287,30 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                     if (newRide.getStatus().equals("REQUESTED")) {
 
                                         if (isNewRequest(newRide)) {
-                                            requestID = snapshot.getId();
 
+                                            requestID = snapshot.getId();
                                             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                             requested = true;
                                             PickupPt pickupPt = newRide.getPickupPoint();
-                                            LatLng pleasework = new LatLng(pickupPt.getLatitude(), pickupPt.getLongitude());
-                                            googleMap.addMarker(new MarkerOptions().position(pleasework).title(newRide.getRider().getUser().fName));
-                                            CameraUpdate center = CameraUpdateFactory.newLatLng(pleasework);
+                                            LatLng pickUp = new LatLng(pickupPt.getLatitude(), pickupPt.getLongitude());
+                                            googleMap.addMarker(new MarkerOptions().position(pickUp).title(newRide.getRider().getUser().fName));
+                                            CameraUpdate center = CameraUpdateFactory.newLatLng(pickUp);
                                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
                                             googleMap.moveCamera(center);
                                             googleMap.animateCamera(zoom);
 
                                             hideWelcomeDisplay();
 
-                                            //
                                             showRequestDisplay(newRide);
 
-                                            //
                                             acceptBut.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
                                                 db.collection("Rides").document(snapshot.getId()).update("status", "ACCEPTED");
-                                                    System.out.println(snapshot.getId());
 
                                                     LatLng a = new LatLng(currentUserLocation.getGeoPoint().getLatitude(),currentUserLocation.getGeoPoint().getLongitude());
                                                     findViewById(R.id.chatBut).setVisibility(View.VISIBLE);
                                                     hideRequestDisplay();
-                                                    //
 
                                                     findViewById(R.id.arrivedButton).setOnClickListener(new View.OnClickListener() {
                                                         @Override
@@ -318,6 +330,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                             declineBut.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View view) {
+
                                                     db.collection("Rides").document(snapshot.getId()).update("status", "DECLINED");
                                                     requested = false;
                                                     googleMap.clear();
@@ -337,6 +350,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             });
     }
 
+    /**
+     * Methods to change what is displayed on the bottom sheet UI.
+     *
+     * @Author: Sasha Buskin
+     * @param newRide
+     */
 
    public void showOnRouteDisplay(Ride newRide){
 
@@ -351,22 +370,20 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
        findViewById(R.id.onTheWay).setVisibility(View.VISIBLE);
    }
 
-
     public void arrivedButtonDisplayChange(){
 
        findViewById(R.id.arriveTip).startAnimation(animFadeOut);
        findViewById(R.id.arriveTip).setVisibility(View.GONE);
        findViewById(R.id.arrivedButton).startAnimation(animFadeOut);
        findViewById(R.id.arrivedButton).setVisibility(View.GONE);
-
        requestText.startAnimation(animFadeOut);
        requestText.setVisibility(View.GONE);
        findViewById(R.id.onTheWay).startAnimation(animFadeOut);
        findViewById(R.id.onTheWay).setVisibility(View.GONE);
    }
 
-
    public void hideWelcomeDisplay(){
+
        welcomeTip.startAnimation(animFadeOut);
        welcomeTip.setVisibility(View.GONE);
        welcomeText.startAnimation(animFadeOut);
@@ -384,7 +401,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
        acceptBut.setVisibility(View.VISIBLE);
        declineBut.startAnimation(animFadeIn);
        declineBut.setVisibility(View.VISIBLE);
-
        requestText.setText("New ride request from "+newRide.getRider().getUser().fName+"!");
        requestText.startAnimation(animFadeIn);
        requestText.setVisibility(View.VISIBLE);
@@ -392,6 +408,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
    }
 
     public void hideRequestDisplay() {
+
         findViewById(R.id.requestPic).startAnimation(animFadeOut);
         findViewById(R.id.requestPic).setVisibility(View.GONE);
         requestText.startAnimation(animFadeOut);
@@ -402,53 +419,62 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
         declineBut.setVisibility(View.GONE);
     }
 
+
+    /**
+     * Method that double checks whether a ride request is new i.e. within the last 10 seconds.
+     *
+     * @Author: Sasha Buskin
+     * @param newRide
+     * @return
+     */
+
     public boolean isNewRequest(Ride newRide){
 
-                    Date liveTime = new Date(System.currentTimeMillis() - 10000);
-    if (newRide.getTimestamp() != null) {
-        if (newRide.getTimestamp().after(liveTime)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    return false;
+        Date liveTime = new Date(System.currentTimeMillis() - 10000);
 
-}
+        if (newRide.getTimestamp() != null) {
+            if (newRide.getTimestamp().after(liveTime)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
 
     public void updateAndZoomLocation(GoogleMap mMap, FusedLocationProviderClient fusedLocation) {
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
         }
+
         fusedLocation.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<Location> task) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom((new LatLng(task.getResult().getLatitude(), task.getResult().getLongitude())), 15));
 
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom((new LatLng(task.getResult().getLatitude(), task.getResult().getLongitude())), 15));
             }
         });
-
     }
 
     @Override
     public void onBackPressed(){//open prompt are you sure?
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
         else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+
             bottomSheetBehavior.setPeekHeight(80);
             dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
         else {
+
             locationManager.removeUpdates(locationListener);
             db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
             Intent intent = new Intent(this, PreScreen.class);
             startActivity(intent);
         }
-
     }
-
-
-
 }

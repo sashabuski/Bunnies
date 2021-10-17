@@ -4,6 +4,7 @@ package com.HopIn;
  * This activity is opened when starting the app, It gives the user options to
  * create an account or sign in, with buttons that take the user to either
  * activity.
+ *
  */
 
 import androidx.annotation.NonNull;
@@ -30,9 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Button SignInButton;
     private Button createAccountButton;
     FirebaseAuth mAuth;
-    FirebaseUser muser;
     FirebaseFirestore db;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PackageManager.PERMISSION_GRANTED);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
-
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -64,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 openSignIn();
             }
         });
-
-
     }
 
     public void openSignIn(){
