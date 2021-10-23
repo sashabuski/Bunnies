@@ -15,6 +15,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 /**
  * This is the Customised ClusterRenderer object. It is currently only used to display all the markers individually
  * (not as a cluster (dot) with number of markers displayed on it) by returning false in overriding the shouldRenderAsCluster method .
+ * It also loads the car marker icon to replace default googleMapAPI markers
  *
  */
 
@@ -24,8 +25,7 @@ class CustomClusterRenderer<T extends CarClusterMarker> extends DefaultClusterRe
 
         super(context, map, clusterManager);
     }
-
-
+    
     @Override
     protected boolean shouldRenderAsCluster(Cluster<T> cluster) {
 

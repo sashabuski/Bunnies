@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
                         messagesList = document.toObject(MessageList.class);
                         filterIncomingMessages(messagesList);
 
-                        CustomAdapter adapter = new CustomAdapter(ChatActivity.this, messagesList.getMessagesList());
+                        CustomChatAdapter adapter = new CustomChatAdapter(ChatActivity.this, messagesList.getMessagesList());
                         recyclerView.setAdapter(adapter);
                         recyclerView.scrollToPosition(messagesList.getMessagesList().size() - 1);
 
@@ -93,14 +93,14 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (userType.equals("Rider")) {
-                    messagesList.getMessagesList().add(new MessageModel(messageBox.getText().toString(), CustomAdapter.MESSAGE_TYPE_OUT, "Rider"));
+                    messagesList.getMessagesList().add(new MessageModel(messageBox.getText().toString(), CustomChatAdapter.MESSAGE_TYPE_OUT, "Rider"));
                 } else {
-                    messagesList.getMessagesList().add(new MessageModel(messageBox.getText().toString(), CustomAdapter.MESSAGE_TYPE_OUT, "Driver"));
+                    messagesList.getMessagesList().add(new MessageModel(messageBox.getText().toString(), CustomChatAdapter.MESSAGE_TYPE_OUT, "Driver"));
                 }
 
                 RideID = (String) getIntent().getSerializableExtra("ReqID");
                 MessageList mL = new MessageList(messagesList.getMessagesList());
-                CustomAdapter adapter = new CustomAdapter(ChatActivity.this, messagesList.getMessagesList());
+                CustomChatAdapter adapter = new CustomChatAdapter(ChatActivity.this, messagesList.getMessagesList());
                 messageBox.setText("");
                 recyclerView.setAdapter(adapter);
                 recyclerView.scrollToPosition(messagesList.getMessagesList().size() - 1);
@@ -133,11 +133,11 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (message.userType.equals("Rider")) {
 
-                    message.messageType = CustomAdapter.MESSAGE_TYPE_IN;
+                    message.messageType = CustomChatAdapter.MESSAGE_TYPE_IN;
 
                 }else if(message.userType.equals("Driver")) {
 
-                    message.messageType = CustomAdapter.MESSAGE_TYPE_OUT;
+                    message.messageType = CustomChatAdapter.MESSAGE_TYPE_OUT;
                 }
             }
         } else if (userType.equals("Rider")) {
@@ -146,11 +146,11 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (message.userType.equals("Driver")) {
 
-                    message.messageType = CustomAdapter.MESSAGE_TYPE_IN;
+                    message.messageType = CustomChatAdapter.MESSAGE_TYPE_IN;
 
                 }else if(message.userType.equals("Rider")) {
 
-                    message.messageType = CustomAdapter.MESSAGE_TYPE_OUT;
+                    message.messageType = CustomChatAdapter.MESSAGE_TYPE_OUT;
                 }
             }
         }
@@ -176,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     messagesList = value.toObject(MessageList.class);
                     filterIncomingMessages(messagesList);
-                    CustomAdapter adapter = new CustomAdapter(ChatActivity.this, messagesList.getMessagesList());
+                    CustomChatAdapter adapter = new CustomChatAdapter(ChatActivity.this, messagesList.getMessagesList());
                     recyclerView.setAdapter(adapter);
                     recyclerView.scrollToPosition(messagesList.getMessagesList().size() - 1);
                 }

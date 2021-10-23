@@ -16,7 +16,6 @@
         tools:context=".DriverMapsActivity"/>
 
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/menuButton"
         android:layout_width="match_parent"

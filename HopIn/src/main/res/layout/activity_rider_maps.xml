@@ -29,19 +29,7 @@
         app:tint="@android:color/white"
         app:backgroundTint="#5181F1"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/confirmPickupPointButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:text="Confirm Pickup Point"
-        android:textAllCaps="false"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:layout_gravity="center|bottom"
-        android:layout_margin="8dp"
-        app:tint="@android:color/white"
-        app:backgroundTint="#5181F1"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
@@ -320,7 +308,7 @@
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/transit_animation" />
 
-				
+
 			<com.airbnb.lottie.LottieAnimationView
 
                 android:id="@+id/carDriving"
@@ -335,13 +323,29 @@
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
 
-                app:lottie_rawRes="@raw/driving_car" />			
+                app:lottie_rawRes="@raw/driving_car" />
 
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/confirmPickupPointButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:text="Confirm Pickup Point"
+        android:textAllCaps="false"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_gravity="center|bottom"
+        android:layout_margin="8dp"
+        app:tint="@android:color/white"
+        app:backgroundTint="#5181F1"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dashboard"
