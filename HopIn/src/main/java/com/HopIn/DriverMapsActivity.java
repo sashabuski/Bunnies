@@ -90,7 +90,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private BottomSheetBehavior bottomSheetBehavior,dashboardSheetBehavior;
     private Animation animFadeIn;
     private Animation animFadeOut;
-    private TextView requestText, welcomeText, welcomeTip, dashboardUserName;
+    private TextView requestText, welcomeText, welcomeTip, dashboardUserName, ArrivedText;
     private LottieAnimationView carDriving;
     private String requestID;
 
@@ -154,45 +154,20 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
          requestText = findViewById(R.id.requestText);
          carDriving = findViewById(R.id.carDriving);
          requestText.setVisibility(View.GONE);
+         ArrivedText = findViewById(R.id.ArrivedText);
+         ArrivedText.setVisibility(View.GONE);
          findViewById(R.id.onTheWay).setVisibility(View.GONE);
          findViewById(R.id.arrivedButton).setVisibility(View.GONE);
          findViewById(R.id.arriveTip).setVisibility(View.GONE);
          findViewById(R.id.requestPic).setVisibility(View.GONE);
          dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
          FloatingActionButton menuButton = findViewById(R.id.menuButton);
+         findViewById(R.id.confirmPickupButton).setVisibility(View.GONE);
 
-        findViewById(R.id.chatBut).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent;
-                intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
 
-                intent.putExtra("ReqID", requestID);
-                intent.putExtra("userType", "Driver");
+        findViewById(R.id.chatBut).setOnClickListener(new ChatButtonClickListener());
 
-                startActivity(intent);
-            }
-        });
-
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
-                {
-                    bottomSheetBehavior.setPeekHeight(80);
-                    dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                }else {
-
-                    bottomSheetBehavior.setPeekHeight(0);
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                    dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    dashboardSheetBehavior.setDraggable(false);
-
-                }
-            }
-        });
+        menuButton.setOnClickListener(new DashboardClickListener());
     }
 
     /**
@@ -317,8 +292,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
                                                         public void onClick(View view) {
                                                             db.collection("Rides").document(snapshot.getId()).update("status", "ARRIVED");
                                                             googleMap.clear();
-                                                            arrivedButtonDisplayChange();
-//
+                                                            arrivedButtonDisplayChange(newRide);
+
+                                                            findViewById(R.id.confirmPickupButton).setOnClickListener(new ConfirmPickupClickListener());
+
                                                         }
                                                     });
 
@@ -350,6 +327,62 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             });
     }
 
+    class DashboardClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+            {
+                bottomSheetBehavior.setPeekHeight(80);
+                dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+            }else {
+
+                bottomSheetBehavior.setPeekHeight(0);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+                dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                dashboardSheetBehavior.setDraggable(false);
+
+            }
+        }
+    }
+
+    class ChatButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent;
+            intent = new Intent(DriverMapsActivity.this, ChatActivity.class);
+
+            intent.putExtra("ReqID", requestID);
+            intent.putExtra("userType", "Driver");
+
+            startActivity(intent);
+        }
+    }
+
+    class ConfirmPickupClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            ArrivedText.startAnimation(animFadeOut);
+            ArrivedText.setVisibility(View.GONE);
+            findViewById(R.id.confirmPickupButton).startAnimation(animFadeOut);
+            findViewById(R.id.confirmPickupButton).setVisibility(View.GONE);
+            findViewById(R.id.chatBut).startAnimation(animFadeOut);
+            findViewById(R.id.chatBut).setVisibility(View.GONE);
+
+            welcomeText.startAnimation(animFadeIn);
+            welcomeText.setVisibility(View.VISIBLE);
+            welcomeTip.startAnimation(animFadeIn);
+            welcomeTip.setVisibility(View.VISIBLE);
+            carDriving.startAnimation(animFadeIn);
+            carDriving.setVisibility(View.VISIBLE);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
+
     /**
      * Methods to change what is displayed on the bottom sheet UI.
      *
@@ -370,8 +403,12 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
        findViewById(R.id.onTheWay).setVisibility(View.VISIBLE);
    }
 
-    public void arrivedButtonDisplayChange(){
-
+    public void arrivedButtonDisplayChange(Ride newRide){
+       ArrivedText.setText("Arrived to pick up "+newRide.getRider().getUser().fName);
+       ArrivedText.startAnimation(animFadeIn);
+       ArrivedText.setVisibility(View.VISIBLE);
+       findViewById(R.id.confirmPickupButton).startAnimation(animFadeIn);
+       findViewById(R.id.confirmPickupButton).setVisibility(View.VISIBLE);
        findViewById(R.id.arriveTip).startAnimation(animFadeOut);
        findViewById(R.id.arriveTip).setVisibility(View.GONE);
        findViewById(R.id.arrivedButton).startAnimation(animFadeOut);
