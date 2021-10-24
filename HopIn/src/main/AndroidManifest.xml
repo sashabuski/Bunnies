@@ -79,7 +79,9 @@
             android:name=".Profile"
             android:label="@string/title_profile" />
 
-
+  <activity
+            android:name=".passager"
+            android:exported="false" />
     </application>
 
 </manifest>
