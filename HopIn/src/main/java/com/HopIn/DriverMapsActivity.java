@@ -92,6 +92,9 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private Animation animFadeOut;
     private TextView requestText, welcomeText, welcomeTip, dashboardUserName;
     private LottieAnimationView carDriving;
+
+    private Button passager_info_tip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,6 +173,24 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+        passager_info_tip = findViewById(R.id.passager_info_tip);
+        passager_info_tip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openactivity_passager();
+            }
+        });
+    }
+
+    private void openactivity_passager(){
+        
+
+        Intent intent = new Intent(DriverMapsActivity.this,passager.class);
+        intent.putExtra("pname","test");
+        intent.putExtra("pupp","st");
+        intent.putExtra("destination","se");
+        intent.putExtra("pt","33");
+        startActivity(intent);
     }
 
     /**
