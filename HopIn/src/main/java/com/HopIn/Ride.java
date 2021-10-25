@@ -7,6 +7,10 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Ride Object
+ *
+ */
 public class Ride implements Serializable {
 
     private UserLocation Driver;

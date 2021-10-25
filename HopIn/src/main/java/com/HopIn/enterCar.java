@@ -59,6 +59,8 @@ public class enterCar extends AppCompatActivity {
     /**
      * Method prevents back button default function
      * (disable back button)
+     *
+     *
      */
     @Override
     public void onBackPressed(){
@@ -67,6 +69,7 @@ public class enterCar extends AppCompatActivity {
 
     /**
      *Method Used in button onClickListener
+     *
      *
      */
     public void addCarToDB(){
