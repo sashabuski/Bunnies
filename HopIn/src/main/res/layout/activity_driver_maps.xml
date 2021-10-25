@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/light_pink">
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -35,7 +36,7 @@
         android:layout_margin="8dp"
         app:tint="@android:color/white"
         android:src="@drawable/whitehamburger"
-        app:backgroundTint="#5181F1"/>
+        app:backgroundTint="@color/dark_pink"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/driverBottomSheet"
@@ -61,7 +62,6 @@
                 android:id="@+id/bottomSheetGrapple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:src="@drawable/bottom_sheet_grapple"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -125,7 +125,7 @@
                 android:layout_marginBottom="31dp"
                 android:background="@drawable/button_white_fill"
                 android:text="Decline"
-                android:textColor="#5881F7"
+                android:textColor="@color/dark_pink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -148,7 +148,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:strokeColor="#5881F7"
+                app:strokeColor="@color/dark_pink"
                 app:strokeWidth="5dp" />
 
 
@@ -314,7 +314,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/Circular"
-            app:strokeColor="#5881F7"
+            app:strokeColor="@color/dark_pink"
             app:strokeWidth="5dp" />
 
         <TextView
@@ -350,7 +350,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -372,7 +372,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -394,7 +394,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -416,7 +416,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -440,7 +440,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="#5181F1" />
+            app:tint="@color/dark_pink" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

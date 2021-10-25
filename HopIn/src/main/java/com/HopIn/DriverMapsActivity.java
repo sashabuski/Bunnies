@@ -2,12 +2,14 @@ package com.HopIn;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -22,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -521,21 +524,54 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
     @Override
     public void onBackPressed(){//open prompt are you sure?
+
+
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
 
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
         else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
 
+
             bottomSheetBehavior.setPeekHeight(80);
+
             dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
+       }
         else {
 
-            locationManager.removeUpdates(locationListener);
-            db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
-            Intent intent = new Intent(this, PreScreen.class);
-            startActivity(intent);
-        }
+           locationManager.removeUpdates(locationListener);
+           db.collection("Drivers").document(mAuth.getCurrentUser().getUid()).delete();
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage("Are you sure you want to leave? All rides will be cancelled");
+            alertDialogBuilder.setPositiveButton("yes",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        //if user click yes, the user will get redirect back to prescreen class (choose between driver or rider class)
+                        public void onClick(DialogInterface popupmsg, int yestxtmsg) {
+                            Intent intent = new Intent(DriverMapsActivity.this, PreScreen.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                            Toast.makeText(DriverMapsActivity.this, "Leaving Map", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                @Override
+                //if user click no, 'staying in map' text will pop up, and user will stay in map class
+                public void onClick(DialogInterface popupmsg, int notxtmsg) {
+                    Toast.makeText(DriverMapsActivity.this, "Staying in Map", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+           
+       }
+
+
     }
+
+
 }
