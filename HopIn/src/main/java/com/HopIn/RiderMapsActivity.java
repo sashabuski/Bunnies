@@ -716,30 +716,6 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onBackPressed() {//open prompt are you sure?
 
-        Intent intent;
-        intent = new Intent(this, RiderMapsActivity.class);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Are you sure you want to leave? All rides will be cancelled");
-        alertDialogBuilder.setPositiveButton("yes",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    //if user click yes, the user will get redirect back to prescreen class (choose between driver or rider class)
-                    public void onClick(DialogInterface popupmsg, int yestxtmsg) {
-                        Intent intent = new Intent(RiderMapsActivity.this, PreScreen.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-
-                        Toast.makeText(RiderMapsActivity.this, "Leaving Map", Toast.LENGTH_LONG).show();
-                    }
-                });
-        alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-            @Override
-            //if user click no, 'staying in map' text will pop up, and user will stay in map class
-            public void onClick(DialogInterface popupmsg, int notxtmsg) {
-                Toast.makeText(RiderMapsActivity.this, "Staying in Map", Toast.LENGTH_LONG).show();
-            }
-        });
-
 
         if ((bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -795,20 +771,43 @@ public class RiderMapsActivity extends FragmentActivity implements OnMapReadyCal
         else if ((bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) && (dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) && (systemStatus == RiderSystemStatus.RESTING_MAP || systemStatus == RiderSystemStatus.DRIVER_REQUESTED
                 || systemStatus == RiderSystemStatus.AWAITING_DRIVER|| systemStatus == RiderSystemStatus.IN_TRANSIT || systemStatus == RiderSystemStatus.DRIVER_ARRIVED)){
 
-            //are you sure you wanna leave bruh all rides will be cancelled.
-
             locationManager.removeUpdates(locationListener);
             db.collection("Riders").document(mAuth.getCurrentUser().getUid()).delete();
-            Intent i = new Intent(this, PreScreen.class);
-            startActivity(i);
+            //are you sure you wanna leave bruh all rides will be cancelled.
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage("Are you sure you want to leave? All rides will be cancelled");
+            alertDialogBuilder.setPositiveButton("yes",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        //if user click yes, the user will get redirect back to prescreen class (choose between driver or rider class)
+                        public void onClick(DialogInterface popupmsg, int yestxtmsg) {
+                            Intent intent = new Intent(RiderMapsActivity.this, PreScreen.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+                            Toast.makeText(RiderMapsActivity.this, "Leaving Map", Toast.LENGTH_LONG).show();
+                        }
+                    });
+            alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                @Override
+                //if user click no, 'staying in map' text will pop up, and user will stay in map class
+                public void onClick(DialogInterface popupmsg, int notxtmsg) {
+                    Toast.makeText(RiderMapsActivity.this, "Staying in Map", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+           // Intent i = new Intent(this, PreScreen.class);
+           // startActivity(i);
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
         else if(dashboardSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setPeekHeight(80);
             dashboardSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
 
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+
 
 
     }
