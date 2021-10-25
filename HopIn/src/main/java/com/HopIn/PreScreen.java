@@ -74,11 +74,25 @@ public class PreScreen extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-                if(zwitch.isChecked()){
-                    driverIntent.putExtra("loggedUser", currentUser);
-                    startActivity(driverIntent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				
+				boolean checkNum = (currentUser.getCarNumber().toString().equals("")) || (currentUser.getCarNumber().toString().equals("N/A"));
+                boolean checkMod = (currentUser.getCarModel().toString().equals("")) || (currentUser.getCarModel().toString().equals("N/A"));
+                
+				if(zwitch.isChecked()){
+					if (checkNum && checkMod) {
+                        Toast.makeText(getApplicationContext(), "ERROR 404! Car number plate & Model not found." + "\nUpdate car details to continue.", Toast.LENGTH_LONG).show();
+                    }
+                    else if(checkNum){
+                        Toast.makeText(getApplicationContext(), "ERROR 404! Car number plate not found." + "\nUpdate car number plate to continue.", Toast.LENGTH_LONG).show();
+					}
+					else if (checkMod){
+                        Toast.makeText(getApplicationContext(), "ERROR 404! Car model not found." + "\nUpdate car model to continue.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        driverIntent.putExtra("loggedUser", currentUser);
+                        startActivity(driverIntent);
+						overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }                    
                 }else{
                     riderIntent.putExtra("loggedUser", currentUser);
                     startActivity(riderIntent);
