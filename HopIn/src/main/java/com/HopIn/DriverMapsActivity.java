@@ -93,8 +93,10 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private TextView requestText, welcomeText, welcomeTip, dashboardUserName, ArrivedText;
     private LottieAnimationView carDriving;
     private String requestID;
-
-    /**
+    private Button passager_info_tip;
+   
+  
+  /**
      * onCreate sets up bottomsheet behaviors for dashboard, bottomsheet.
      * Sets up onClickListeners for chat button and menu button.
      * Uses fusedLocationClient to get initial location of user.
@@ -102,7 +104,6 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
      *
      * @param savedInstanceState
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,7 +168,30 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
 
         findViewById(R.id.chatBut).setOnClickListener(new ChatButtonClickListener());
 
+
         menuButton.setOnClickListener(new DashboardClickListener());
+/*    
+        Jianyi passager button
+        
+        passager_info_tip = findViewById(R.id.passager_info_tip);
+        passager_info_tip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openactivity_passager();
+            }
+        });
+    }
+
+    private void openactivity_passager(){
+        
+
+        Intent intent = new Intent(DriverMapsActivity.this,passager.class);
+        intent.putExtra("pname","test");
+        intent.putExtra("pupp","st");
+        intent.putExtra("destination","se");
+        intent.putExtra("pt","33");
+        startActivity(intent);
+*/
     }
 
     /**

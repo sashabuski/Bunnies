@@ -16,6 +16,16 @@
         tools:context=".DriverMapsActivity"/>
 
 
+<!-- Jainyi passager button
+    <Button
+        android:id="@+id/passager_info_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Passager Info"
+        android:background="@color/light_pink"
+        android:layout_gravity="right"/>
+-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/menuButton"
         android:layout_width="match_parent"
@@ -433,7 +443,5 @@
             app:tint="#5181F1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

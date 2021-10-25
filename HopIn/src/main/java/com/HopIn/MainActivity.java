@@ -14,10 +14,12 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,7 +27,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+/*Test code*/
 public class MainActivity extends AppCompatActivity {
 
     private Button SignInButton;
@@ -62,6 +64,35 @@ public class MainActivity extends AppCompatActivity {
                 openSignIn();
             }
         });
+
+
+        ImageView fab_twitter = findViewById(R.id.fab_twitter);
+        fab_twitter.setClickable(true);
+        fab_twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/?lang=zh-cn")));
+            }
+        });
+
+        ImageView fab_facebook = findViewById(R.id.fab_facebook);
+        fab_facebook.setClickable(true);
+        fab_facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/")));
+            }
+        });
+
+        ImageView fab_instagram = findViewById(R.id.fab_instagram);
+        fab_instagram.setClickable(true);
+        fab_instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/")));
+            }
+        });
+
     }
 
     public void openSignIn(){

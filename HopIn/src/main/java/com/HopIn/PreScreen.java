@@ -41,6 +41,7 @@ public class PreScreen extends AppCompatActivity {
     Intent riderIntent;
     Button profileButton;
     Intent profileIntent;
+    RoundImageView roundView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,9 @@ public class PreScreen extends AppCompatActivity {
 
             }});
 
+
+        roundView = findViewById(R.id.imgView);
+
         DocumentReference docRef = db.collection("Users").document(mAuth.getCurrentUser().getUid());
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -87,6 +91,7 @@ public class PreScreen extends AppCompatActivity {
                 d.setText(currentUser.getlName());
                 e.setText(currentUser.getCarModel());
                 f.setText(currentUser.getCarNumber());
+
             }
         });
 
@@ -97,7 +102,6 @@ public class PreScreen extends AppCompatActivity {
                 openProfile();
             }
         });
-
     }
 
     @Override
