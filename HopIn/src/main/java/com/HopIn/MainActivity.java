@@ -4,6 +4,7 @@ package com.HopIn;
  * This activity is opened when starting the app, It gives the user options to
  * create an account or sign in, with buttons that take the user to either
  * activity.
+ *
  */
 
 import androidx.annotation.NonNull;
@@ -29,13 +30,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+/*Test code*/
 public class MainActivity extends AppCompatActivity {
 
     private Button SignInButton;
     private Button createAccountButton;
     FirebaseAuth mAuth;
-    FirebaseUser muser;
     FirebaseFirestore db;
 
     @Override
@@ -67,13 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 openSignIn();
             }
         });
-        
+
+
         ImageView fab_twitter = findViewById(R.id.fab_twitter);
         fab_twitter.setClickable(true);
         fab_twitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.tuiteblog.com/")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/?lang=zh-cn")));
             }
         });
 
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         fab_instagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.insarticle.com/")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/")));
             }
         });
 

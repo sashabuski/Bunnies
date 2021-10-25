@@ -26,6 +26,9 @@
             android:name=".Profile"
             android:exported="true"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".ChatActivity"></activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -88,20 +91,24 @@
 
         <activity
             android:name=".SignInActivity"
+
             android:label="@string/title_activity_sign_in"
             android:screenOrientation="portrait" />
+
         <activity android:name=".Verification" />
         <activity android:name=".Register2" />
         <activity
             android:name=".RiderMapsActivity"
-
-            android:label="@string/title_activity_rider_maps"
-            android:screenOrientation="portrait" />
-<!--        <activity-->
-<!--            android:name=".Profile"-->
-<!--            android:label="@string/title_profile" />-->
+            android:label="@string/title_activity_rider_maps" />
+        <activity
+            android:name=".Profile"
+            android:label="@string/title_profile" />
 
 
+
+  <activity
+            android:name=".passager"
+            android:exported="false" />
 
     </application>
 

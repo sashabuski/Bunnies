@@ -28,8 +28,6 @@ public class UserLocation implements Serializable {
         return bearing;
     }
 
-
-
     public User getUser() {
         return user;
     }

@@ -18,18 +18,18 @@ import java.io.Serializable;
 /**
  * This Activity requests the users name to be entered by the user when registering
  * their account, and saves it to the User db object.
+ *
  */
 public class enterName extends AppCompatActivity implements Serializable {
 
     private EditText firstNameInput, lastNameInput;
     private Button nextButton;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private User user;
     private Intent nextIntent;
+
     @Override
-
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_name);
@@ -61,8 +61,6 @@ public class enterName extends AppCompatActivity implements Serializable {
 
     public void addNameToDB(){
 
-
-
         String firstName = firstNameInput.getText().toString().trim();
         String lastName = lastNameInput.getText().toString().trim();
 
@@ -77,7 +75,6 @@ public class enterName extends AppCompatActivity implements Serializable {
             return;
         }
 
-
         db.collection("Users").document(mAuth.getCurrentUser().getUid())
                 .update(
                         "fName", firstName,
@@ -88,7 +85,6 @@ public class enterName extends AppCompatActivity implements Serializable {
                 System.out.println("you did it");
             }
         });
-
 
         nextIntent.putExtra("user", user);
         startActivity(nextIntent);
