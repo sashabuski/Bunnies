@@ -24,7 +24,7 @@
         android:layout_margin="8dp"
         android:src="@drawable/whitehamburger"
         app:tint="@android:color/white"
-        app:backgroundTint="#5181F1"/>
+        app:backgroundTint="@color/dark_pink"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/confirmPickupPointButton"
@@ -38,7 +38,7 @@
         android:layout_gravity="center|bottom"
         android:layout_margin="8dp"
         app:tint="@android:color/white"
-        app:backgroundTint="#5181F1"/>
+        app:backgroundTint="@color/dark_pink"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
@@ -155,7 +155,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/verificationCode"
 
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:strokeColor="#5881F7"
+                app:strokeColor="@color/dark_pink"
                 app:strokeWidth="5dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -177,7 +177,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:strokeColor="#5881F7"
+                app:strokeColor="@color/dark_pink"
                 app:strokeWidth="5dp" />
 
 
@@ -248,7 +248,7 @@
                 android:layout_marginEnd="244dp"
                 android:layout_marginRight="244dp"
                 android:layout_marginBottom="81dp"
-                android:background="#5881F7"
+                android:background="@color/dark_pink"
                 android:src="@android:drawable/stat_notify_chat"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -266,7 +266,7 @@
                 android:layout_marginEnd="100dp"
                 android:layout_marginRight="100dp"
                 android:layout_marginBottom="92dp"
-                android:background="#5881F7"
+                android:background="@color/dark_pink"
                 android:src="@android:drawable/stat_sys_phone_call"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -389,7 +389,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/Circular"
-            app:strokeColor="#5881F7"
+            app:strokeColor="@color/dark_pink"
             app:strokeWidth="5dp" />
 
         <TextView
@@ -425,7 +425,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -447,7 +447,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -469,7 +469,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -491,7 +491,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:cardBackgroundColor="#587EF3"
+                app:cardBackgroundColor="@color/dark_pink"
                 app:cardElevation="8dp"
                 app:cardCornerRadius="8dp">
                 <androidx.appcompat.widget.AppCompatImageView
@@ -517,7 +517,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="#5181F1" />
+            app:tint="@color/dark_pink" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

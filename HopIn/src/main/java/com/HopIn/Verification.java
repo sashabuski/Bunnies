@@ -69,53 +69,6 @@ public class Verification extends AppCompatActivity implements Serializable {
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-            }
-        });
-
-        //will fix in sprint 2
-
-
-            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(v.getContext(), "Verification Email has been sent", Toast.LENGTH_SHORT).show();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                }
-            });
-        }
-    });
-*/
-        /*
-        resendCode.setVisibility(View.VISIBLE);
-
-
-        resendCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-
-
-
-                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(v.getContext(),
-                                "Verification Email has been sent.",
-                                Toast.LENGTH_SHORT).show();
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("tag", "onFailure: Email not sent " + e.getMessage());
-                    }
-                });
-
-
                 user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -128,21 +81,23 @@ public class Verification extends AppCompatActivity implements Serializable {
                         Log.d("tag", "onFailure: Email not sent " + e.getMessage());
                     }
                 });
-*/
-
-                //intent.putExtra("user", user);
-               // startActivity(intent);
-
-                currentuserID = mAuth.getCurrentUser().getUid();
             }
+        });
 
 
+
+
+        currentuserID = mAuth.getCurrentUser().getUid();
+
+
+    }
 
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+}
 
 
 

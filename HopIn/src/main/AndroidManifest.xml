@@ -6,6 +6,7 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -72,7 +73,7 @@
             android:label="@string/title_activity_dmaps" />
         -->
 
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"/>
 
         <activity
             android:name=".MainActivity"
@@ -84,8 +85,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity 
-            android:name=".MainActivity" />
+
         <activity
             android:name=".SignInActivity"
             android:label="@string/title_activity_sign_in"
@@ -97,9 +97,9 @@
 
             android:label="@string/title_activity_rider_maps"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".Profile"
-            android:label="@string/title_profile" />
+<!--        <activity-->
+<!--            android:name=".Profile"-->
+<!--            android:label="@string/title_profile" />-->
 
 
 
