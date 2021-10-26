@@ -160,7 +160,7 @@
             android:id="@+id/btnUpdate"
             android:layout_width="293dp"
             android:layout_height="50dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="40dp"
             android:text="Update"
             android:textAllCaps="false"
             android:background="@drawable/rounded_button"
@@ -170,22 +170,6 @@
             app:layout_constraintStart_toStartOf="@+id/txtCarModel"
             app:layout_constraintTop_toBottomOf="@+id/txtCarModel"
             app:layout_constraintVertical_bias="0.617" />
-
-        <ImageView
-            android:id="@+id/imgID"
-            android:layout_width="49dp"
-            android:layout_height="46dp"
-            android:layout_gravity="center|top"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="24dp"
-
-            android:src="@drawable/pinkwabbit"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints,ImageContrastCheck" />
 
         <ImageView
 
@@ -202,7 +186,7 @@
             android:src="@drawable/profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgID"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints,ImageContrastCheck" />
 
         <TextView
