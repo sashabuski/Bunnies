@@ -37,7 +37,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText messageBox;
     private String RideID;
     private MessageList messagesList = new MessageList();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db;
     private String userType;
 
     /**
@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        db = FirebaseFirestore.getInstance();
         userType = (String) getIntent().getSerializableExtra("userType");
         recyclerView = findViewById(R.id.recycler_view);
         RideID = (String) getIntent().getSerializableExtra("ReqID");
@@ -183,4 +183,8 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
 }

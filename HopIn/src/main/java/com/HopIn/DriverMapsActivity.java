@@ -79,8 +79,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private ActivityDriverMapsBinding binding;
     private LocationListener locationListener;
     private LocationManager locationManager;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private User currentUser;
     private UserLocation currentUserLocation;
     private BitmapDescriptor icon;
@@ -96,7 +96,7 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     private TextView requestText, welcomeText, welcomeTip, dashboardUserName, ArrivedText;
     private LottieAnimationView carDriving;
     private String requestID;
-    private Button passager_info_tip;
+    //private Button passager_info_tip;
    
   
   /**
@@ -111,6 +111,8 @@ public class DriverMapsActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         binding = ActivityDriverMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
