@@ -100,7 +100,11 @@
         <activity
             android:name=".RiderMapsActivity"
             android:label="@string/title_activity_rider_maps" />
-        
+        <activity
+            android:name=".ListRides"
+            android:label="@string/title_list"
+            android:screenOrientation="portrait" />
+
 
 
 

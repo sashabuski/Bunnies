@@ -45,6 +45,7 @@ public class PreScreen extends AppCompatActivity {
     Button profileButton;
     Intent profileIntent;
     RoundImageView roundView;
+    Button listButton;
 
     private Object SaveSharedPreference;
 
@@ -125,9 +126,16 @@ public class PreScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openProfile();
-
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
 
+        listButton = findViewById(R.id.btnList);
+        listButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                openList();
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }
@@ -169,12 +177,15 @@ public class PreScreen extends AppCompatActivity {
     }
 
     public void openProfile(){
-
         Intent intent = new Intent(this, Profile.class);
         startActivity(intent);
-
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
 
+    public void openList(){
+        Intent intent = new Intent(this, ListRides.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
