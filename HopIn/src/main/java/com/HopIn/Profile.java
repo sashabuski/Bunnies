@@ -49,9 +49,9 @@ import com.squareup.picasso.Picasso;
 
 public class Profile extends AppCompatActivity {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseFirestore db;
 
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseAuth mAuth;
     User currentUser;
 
     private Button updateButton;
