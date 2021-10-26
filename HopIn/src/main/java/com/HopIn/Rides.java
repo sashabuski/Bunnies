@@ -1,26 +1,9 @@
 package com.HopIn;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.database.GenericTypeIndicator;
-
-import java.sql.Time;
-import java.util.Date;
-import java.util.HashMap;
-
 public class Rides {
-    public String status;
-    public String timestamp;
-    public String driver, pickup, rider;
+    public String status, timestamp, driverE, driverN, pickup, riderE, riderN;
 
     public Rides() {
-    }
-
-    public Rides(String status, String timestamp, String driver, String pickup, String rider) {
-        this.status = status;
-        this.timestamp = timestamp;
-        this.driver = driver;
-        this.pickup = pickup;
-        this.rider = rider;
     }
 
     public String getStatus() {
@@ -39,12 +22,20 @@ public class Rides {
         this.timestamp = timestamp;
     }
 
-    public String getDriver() {
-        return driver;
+    public String getDriverE() {
+        return driverE;
     }
 
-    public void setDriver(String driver) {
-        this.driver = driver;
+    public void setDriverE(String driverE) {
+        this.driverE = driverE;
+    }
+
+    public String getDriverN() {
+        return driverN;
+    }
+
+    public void setDriverN(String driverN) {
+        this.driverN = driverN;
     }
 
     public String getPickup() {
@@ -55,11 +46,19 @@ public class Rides {
         this.pickup = pickup;
     }
 
-    public String getRider() {
-        return rider;
+    public String getRiderE() {
+        return riderE;
     }
 
-    public void setRider(String rider) {
-        this.rider = rider;
+    public void setRiderE(String riderE) {
+        this.riderE = riderE;
+    }
+
+    public String getRiderN() {
+        return riderN;
+    }
+
+    public void setRiderN(String riderN) {
+        this.riderN = riderN;
     }
 }

@@ -22,24 +22,13 @@ import java.util.Map;
 
 public class ListRides extends AppCompatActivity {
 
-    //private RecyclerView recyclerView;
     RecyclerView recview;
-
-    //private List<Rides> ridesList;
-    //ArrayList<model> datalist;
     List<Rides> datalist;
-
-    //FirebaseFirestore db;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser mUser = mAuth.getCurrentUser();
-
-    //myadapter adapter;
     private RidesAdapter adapter;
-
     User currentUser;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,9 +54,6 @@ public class ListRides extends AppCompatActivity {
                         for(DocumentSnapshot d:list) {
 
                             Map<String, Object> testing1 = d.getData();
-                            //for (Map.Entry<String, Object> entry : testing1.entrySet()) {
-                            //    System.out.println("\n" + entry.getKey() + " : " + entry.getValue()+"\n");
-                            //}
                             Timestamp date = (Timestamp) testing1.get("timestamp");
                             Date date1 = date.toDate();
                             String strDate = date1.toString();
@@ -76,21 +62,31 @@ public class ListRides extends AppCompatActivity {
                             HashMap riderpt2 = (HashMap) riderpt1.get("user");
                             String riderEmail = (String) riderpt2.get("email");
                             //System.out.println("\nEmail of rider = " +riderEmail);
+                            HashMap riderN1 = (HashMap) testing1.get("rider");
+                            HashMap riderN2 = (HashMap) riderN1.get("user");
+                            String riderFName = (String) riderN2.get("fName");
+                            String riderLName = (String) riderN2.get("lName");
+                            String riderName = riderFName +" "+ riderLName;
 
                             HashMap driverpt1 = (HashMap) testing1.get("driver");
                             HashMap driverpt2 = (HashMap) driverpt1.get("user");
                             String driverEmail = (String) driverpt2.get("email");
                             //System.out.println("\nEmail of driver = " +driverEmail);
+                            HashMap driverN1 = (HashMap) testing1.get("rider");
+                            HashMap driverN2 = (HashMap) driverN1.get("user");
+                            String driverFName = (String) driverN2.get("fName");
+                            String driverLName = (String) driverN2.get("lName");
+                            String driverName = driverFName +" "+ driverLName;
 
-                            String driverName = driverEmail;
-                            String riderName = riderEmail;
                             if (email.equals(driverEmail)){
                                 System.out.println("Logged user is Driver = "+driverEmail);
                                 driverName="Yourself";
                                 Rides obj = new Rides();
                                 obj.setTimestamp(strDate);
-                                obj.setDriver(driverName);
-                                obj.setRider(riderName);
+                                obj.setDriverN(driverName);
+                                obj.setDriverE(driverEmail);
+                                obj.setRiderN(riderName);
+                                obj.setRiderE(riderEmail);
                                 datalist.add(obj);
                             }
                             else if (email.equals(riderEmail)){
@@ -98,13 +94,12 @@ public class ListRides extends AppCompatActivity {
                                 riderName="Yourself";
                                 Rides obj = new Rides();
                                 obj.setTimestamp(strDate);
-                                obj.setDriver(driverName);
-                                obj.setRider(riderName);
+                                obj.setDriverN(driverName);
+                                obj.setDriverE(driverEmail);
+                                obj.setRiderN(riderName);
+                                obj.setRiderE(riderEmail);
                                 datalist.add(obj);
                             }
-
-                            //Rides obj = d.toObject(Rides.class);
-
                         }
                         adapter.notifyDataSetChanged();
                     }
