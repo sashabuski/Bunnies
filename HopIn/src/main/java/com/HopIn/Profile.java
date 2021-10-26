@@ -277,7 +277,7 @@ public class Profile extends AppCompatActivity {
 
 
         public void updateUser () {
-            if (txtFirstName.getText().toString().equals("")) {
+            if (!isNameValid(txtFirstName.getText().toString())) {
                 txtFirstName.setError("First Name is required.");
                 txtFirstName.requestFocus();
                 return;
@@ -305,28 +305,38 @@ public class Profile extends AppCompatActivity {
             finish();
             startActivity(getIntent());
         }
-        private void uploadImageToFirebase (Uri imageUri)
-    {
-        //upload user's profile image to firebase storage
-        final StorageReference fileRef = storageReference.child("users/" + mAuth.getCurrentUser().getUid()+"/profile.jpg");
-        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(profileImage);
-                    }
-                });
+        private void uploadImageToFirebase (Uri imageUri) {
+            //upload user's profile image to firebase storage
+            final StorageReference fileRef = storageReference.child("users/" + mAuth.getCurrentUser().getUid() + "/profile.jpg");
+            fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.get().load(uri).into(profileImage);
+                        }
+                    });
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Profile.this, "Image Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Profile.this, "Image Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-    }
+        }
+
+        public boolean isNameValid(String s) {
+            if (s.equals("")) {
+                return false;
+            }
+            else if (s.trim().equals("")) {
+                return false;
+            }
+            return true;
+        }
+
     }
 
