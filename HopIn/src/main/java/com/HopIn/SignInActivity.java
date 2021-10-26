@@ -44,11 +44,11 @@ public class SignInActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         loading = findViewById(R.id.loading);
-        signInButton = (Button)findViewById(R.id.SignInButton);
+        signInButton = (Button) findViewById(R.id.SignInButton);
         emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
 
-        signInButton.setOnClickListener(new View.OnClickListener(){
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -59,39 +59,42 @@ public class SignInActivity extends AppCompatActivity {
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             loading.setVisibility(View.GONE);
                             Intent intent;
                             intent = new Intent(SignInActivity.this, PreScreen.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        }else{
+                        } else {
                             Toast.makeText(SignInActivity.this, "Your email or password is incorrect", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-
-
-    public void signIn() {
-
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Intent intent;
-                    intent = new Intent(SignInActivity.this, PreScreen.class);
-
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(SignInActivity.this, "Failed to login. Please check your credentials", Toast.LENGTH_LONG).show();
-                }
-
             }
         });
-
     }
 
+public void signIn(){
+
+    String email = emailEditText.getText().toString().trim();
+    String password = passwordEditText.getText().toString().trim();
+
+    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        @Override
+        public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
+            if (task.isSuccessful()) {
+                Intent intent;
+                intent = new Intent(SignInActivity.this, PreScreen.class);
+
+                startActivity(intent);
+            } else {
+                Toast.makeText(SignInActivity.this, "Failed to login. Please check your credentials", Toast.LENGTH_LONG).show();
+            }
+
+        }
+    });
+
 }
+
+}
+
