@@ -10,17 +10,17 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -131,6 +131,14 @@ public class ListRides extends AppCompatActivity {
                                 datalist.add(obj);
                             }
                         }
+
+                        //sort the datalist according to timestamp before notifying adapter
+                        Collections.sort(datalist, new Comparator<Rides>() {
+                            @Override
+                            public int compare(Rides o1, Rides o2) {
+                                return o1.timestamp.compareTo(o2.timestamp);
+                            }
+                        });
                         adapter.notifyDataSetChanged();
                     }
                 });
