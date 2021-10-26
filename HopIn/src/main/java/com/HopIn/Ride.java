@@ -19,6 +19,8 @@ public class Ride implements Serializable {
     private String status;
     private PickupPt pickupPoint;
 
+
+
     public Ride(UserLocation driver, UserLocation rider, Date timestamp, PickupPt pickupPoint) {
         this.Driver = driver;
         this.Rider = rider;
@@ -33,6 +35,10 @@ public class Ride implements Serializable {
         this.pickupPoint = null;
         this.timestamp = null;
         this.status = null;
+    }
+
+    public Ride(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public PickupPt getPickupPoint() {
