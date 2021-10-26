@@ -20,7 +20,18 @@ public class ProfileTest extends TestCase {
 		String firstname="Testing";
 		String secondname=" ";
 
-        assertTrue(profile.isNameValid(firstname));
-		assertFalse(profile.isNameValid(secondname));
+        assertFalse(profile.isNameValid(firstname));
+
+        assertFalse(profile.isNameValid(secondname));
     }
+    public void testisNameValidd() {
+
+        Profile profile = new Profile();
+
+        String firstname="Testing";
+        String secondname=" ";
+
+        assertTrue(profile.isNameValid(firstname));
+    }
+
 }
