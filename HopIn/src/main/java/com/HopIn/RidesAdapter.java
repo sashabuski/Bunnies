@@ -9,6 +9,11 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
+/**
+ * RidesAdapter is used for the RecyclerView implemented to display past rides for logged in user
+ *
+ */
+
 public class RidesAdapter extends RecyclerView.Adapter<RidesAdapter.RidesViewHolder> {
 
     private List<Rides> ridesList;
@@ -31,7 +36,7 @@ public class RidesAdapter extends RecyclerView.Adapter<RidesAdapter.RidesViewHol
         holder.textDEmail.setText("Driver Email: " + ride.driverE);
         holder.textRName.setText("Rider Name: "+ride.riderN);
         holder.textREmail.setText("Rider email: " + ride.riderE);
-        holder.textPickup.setText("Pick up: Not Available");
+        holder.textPickup.setText("Pick up location: "+ ride.pickup);
     }
 
     @Override

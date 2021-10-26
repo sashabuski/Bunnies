@@ -1,5 +1,10 @@
 package com.HopIn;
 
+/**
+ * Create an object for a single Ride based on documents from Firebase
+ *
+ */
+
 public class Rides {
     public String status, timestamp, driverE, driverN, pickup, riderE, riderN;
 
